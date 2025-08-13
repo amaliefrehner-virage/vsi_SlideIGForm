@@ -51,12 +51,19 @@ namespace SlideIGWebRetry.Controllers
             List<JsonResult<ScenarioInfo>> ListOfScenarios = new List<JsonResult<ScenarioInfo>> { };
             List<string> listIDS = new List<string> { };
            
-            string listofIds = Request.Cookies["listofIds"]?.Value;
-            if (listofIds != null)
+
+            for (int i = 1; i < 100; i++)
             {
-                listIDS.Add(listofIds);
+                string listofIds = Request.Cookies["listofIds" + i]?.Value;
+                if (listofIds != null)
+                {
+                    listIDS.Add(listofIds);
+                }
+                else
+                {
+                    break;
+                }
             }
-            
             if (listIDS.Count != 0 && listIDS[0] != "")
             {
                 foreach (var h in listIDS)

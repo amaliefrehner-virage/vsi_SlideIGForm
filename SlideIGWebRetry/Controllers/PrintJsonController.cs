@@ -17,18 +17,18 @@ namespace SlideIGWebRetry.Controllers
             var apicontroller = new APIScenarioController();
             List<JsonResult<ScenarioInfo>> ListOfScenarios = new List<JsonResult<ScenarioInfo>> { };
             List<string> listIDS = new List<string> { };
-            //for (int i = 1; i < 100; i++)
-            //{
-                string listofIds = Request.Cookies["listofIds"]?.Value;
+            for (int i = 1; i < 100; i++)
+            {
+                string listofIds = Request.Cookies["listofIds"+i]?.Value;
                 if (listofIds != null)
                 {
                     listIDS.Add(listofIds);
                 }
-                //else
-                //{
-                //    break;
-                //}
-            //}
+                else
+                {
+                    break;
+                }
+            }
             if (listIDS.Count != 0 && listIDS[0] != "")
             {
                 foreach (var h in listIDS)
