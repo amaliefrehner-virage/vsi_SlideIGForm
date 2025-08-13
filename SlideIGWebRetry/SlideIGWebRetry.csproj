@@ -250,6 +250,7 @@
     <Content Include="Content\Images\edit.png" />
     <Content Include="Content\Images\file.png" />
     <Content Include="Content\Images\import.png" />
+    <Content Include="Content\Images\json-file.png" />
     <Content Include="Content\Images\logo.png" />
     <Content Include="Content\Images\new.png" />
     <Content Include="Content\Images\next-arrow.png" />

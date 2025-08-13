@@ -504,7 +504,6 @@
                         error: function (xhr, status, error) {
                             unsuccessfulUploads += file.name + ": " + JSON.stringify(xhr); + "\n\n"
                             errors += 1;
-                            //alert(unsuccessfulUploads)
                         },
                         complete: function (xhr, statusText) {
                             if (j == e.target.files.length - 1) {
