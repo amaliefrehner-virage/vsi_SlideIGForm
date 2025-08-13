@@ -1,0 +1,235 @@
+﻿
+@using SlideIGWebRetry.Models
+@model ScenarioModel
+
+@{
+    ViewBag.Title = "Print";
+}
+
+<html>
+<head>
+    <script src="~/Scripts/jquery-3.6.4.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="assets/css/bootstrap-responsive.css" rel="stylesheet">
+</head>
+<body>
+    @if (Model != null)
+    {
+        <div>
+            <div class="container">
+                @if (@Model.ScenarioInfoId != null)
+                {
+                    <div class="flex-column flex-md-row justify-content-center align-content-center">
+                        @if (Model.SlideList != null)
+                        {
+                            <div class="row-md-6">
+                                <div class="table-responsive w-100">
+                                    <table border="1" cellpadding="0" cellspacing="0" class="w-100">
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    <div class="p-2">
+                                                        <div class="input-group-append">
+                                                            @if (Model.Language == "es")
+                                                            {
+                                                                <p class="lessonHeader">Lección: @Model.Scenario_number</p>
+
+                                                            }
+                                                            else if (Model.Language == "fr")
+                                                            {
+                                                                <p class="lessonHeader">Leçon: @Model.Scenario_number</p>
+                                                            }
+                                                            else
+                                                            {
+                                                                <p class="lessonHeader">Lesson: @Model.Scenario_number</p>
+                                                            }
+                                                            <p class="mx-1">-</p>
+                                                            <p id="text-InfoTitle-@Model.ScenarioInfoId">@Model.Level_name</p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <div class="p-2">
+                                                        @foreach (var o in Model.SlideList)
+                                                        {
+                                                            <p>@Html.Raw(o.Name)</p>
+                                                            if (o.Subtitles.Count != 0)
+                                                            {
+                                                                foreach (var k in o.Subtitles)
+                                                                {
+                                                                    <ul>
+                                                                        <li>
+                                                                            @Html.Raw(k.Name)
+                                                                            @if (k.Bullets.Count != 0)
+                                                                            {
+                                                                                <ul class="list-unstyled">
+                                                                                    @foreach (var u in k.Bullets)
+                                                                                    {
+                                                                                        <li class="list-bullet">@Html.Raw(u.Name)</li>
+                                                                                    }
+                                                                                </ul>
+                                                                            }
+                                                                        </li>
+                                                                    </ul>
+                                                                }
+                                                            }
+                                                        }
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <table border="1" cellpadding="0" cellspacing="0" class="w-100">
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <div class="pt-1 px-3">
+                                                @if (Model.Language == "es")
+                                                {
+                                                    <p class="lessonHeader">Lección: @Model.Scenario_number</p>
+
+                                                }
+                                                else if (Model.Language == "fr")
+                                                {
+                                                    <p class="lessonHeader">Leçon: @Model.Scenario_number</p>
+                                                }
+                                                else
+                                                {
+                                                    <p class="lessonHeader">Lesson: @Model.Scenario_number</p>
+                                                }
+                                                @if (Model.ScenarioSlideId != null)
+                                                {
+                                                    <h6 class="alert-light">Empty Slide</h6>
+                                                }
+                                                else
+                                                {
+                                                    <h6 class="alert-light">No Slide</h6>
+                                                }
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        }
+                        @if (Model.IGList != null)
+                        {
+                            <div class="row-md-6 mt-1 w-100">
+                                <div class="d-flex justify-content-between px-2" style="background-color: #b2c4e4">
+                                    @if (Model.Language == "es")
+                                    {
+                                        <p class="lessonHeader">Lección: @Model.Scenario_number</p>
+
+                                    }
+                                    else if (Model.Language == "fr")
+                                    {
+                                        <p class="lessonHeader">Leçon: @Model.Scenario_number</p>
+                                    }
+                                    else
+                                    {
+                                        <p class="lessonHeader">Lesson: @Model.Scenario_number</p>
+                                    }
+                                    <p class=""><strong>@Model.Level_name.ToString()</strong></p>
+                                </div>
+                                @foreach (var i in @Model.IGList)
+                                {
+                                    <p>@Html.Raw(@i.Name)</p>
+                                    if (i.Subtitles.Count != 0)
+                                    {
+                                        foreach (var j in i.Subtitles)
+                                        {
+                                            <ul>
+                                                <li>
+                                                    @Html.Raw(j.Name)
+                                                    @if (j.Bullets.Count != 0)
+                                                    {
+                                                        <ul class="list-unstyled">
+                                                            @foreach (var v in j.Bullets)
+                                                            {
+                                                                <li class="list-bullet">@Html.Raw(v.Name)</li>
+                                                            }
+                                                        </ul>
+                                                    }
+                                                </li>
+                                            </ul>
+                                        }
+                                    }
+                                    <hr class="border-dark" />
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="row-md-6 mt-1 w-100">
+                                <div class="d-flex justify-content-between px-2" style="background-color: #b2c4e4">
+                                    @if (Model.Language == "es")
+                                    {
+                                        <p class="lessonHeader">Lección: @Model.Scenario_number</p>
+
+                                    }
+                                    else if (Model.Language == "fr")
+                                    {
+                                        <p class="lessonHeader">Leçon: @Model.Scenario_number</p>
+                                    }
+                                    else
+                                    {
+                                        <p class="lessonHeader">Lesson: @Model.Scenario_number</p>
+                                    }
+                                    <p class=""><strong>@Model.Level_name</strong></p>
+                                </div>
+                                @if (Model.ScenarioIGId != null)
+                                {
+                                    <h6 class="alert-light pt-1 px-3">Empty IG</h6>
+                                }
+                                else
+                                {
+                                    <h6 class="alert-light pt-1 px-3">No IG</h6>
+                                }
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="container">
+                        <div class="row justify-content-center align-content-center">
+                            <h1 class="row m-2">Le scenario n'existe pas</h1>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>}
+    else
+    {
+        <h1>Le scenario n'existe pas</h1>
+    }
+</body>
+</html>
+
+<style>
+    .list-bullet:before {
+        content: "";
+        display: inline-block;
+        width: 5.5px;
+        height: 5.5px;
+        margin-right: 10px;
+        border-radius: 50%;
+        border: 1px solid black;
+    }
+
+    img {
+        width: 40px
+    }
+</style>
+
+<script>
+    $(document).ready(function () {
+        window.print();
+    });
+</script>

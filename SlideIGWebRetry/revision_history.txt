@@ -1,0 +1,18 @@
+1.0.0.4
+=> AF;added revision history
+1.0.0.3
+=> AF;traduire 'leçon' à 'lesson' ou 'leccion' selon la langue
+
+1.0.0.2
+=> AF;preserve filters on next page to avoid resetting filters
+
+1.0.0.1
+=> AF;make next and previous buttons work with the type and language filters
+
+1.0.0.0
+=> NL;Changing Controllers structure
+=> Remove Unused in views
+=> Remove Unused in Controllers
+=> Remove unused DB Model
+=> Remove Debug Logs
+=> Initial commit

@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.33328.57
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SlideIGWebRetry", "SlideIGWebRetry\SlideIGWebRetry.csproj", "{A9A399E1-6632-4532-95B1-2FDBE001DE8F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A9A399E1-6632-4532-95B1-2FDBE001DE8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9A399E1-6632-4532-95B1-2FDBE001DE8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9A399E1-6632-4532-95B1-2FDBE001DE8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9A399E1-6632-4532-95B1-2FDBE001DE8F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B73BEE75-E7FB-4682-9E1E-A7BC5FF31EF5}
+	EndGlobalSection
+EndGlobal

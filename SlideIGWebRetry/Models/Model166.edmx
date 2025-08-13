@@ -1,0 +1,941 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="SlideIGWebModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="BulletPoints">
+          <Key>
+            <PropertyRef Name="IDBulletPoints" />
+          </Key>
+          <Property Name="IDBulletPoints" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Unicode" Type="nvarchar" MaxLength="10" />
+          <Property Name="ClassContent" Type="nvarchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="Language">
+          <Key>
+            <PropertyRef Name="IDLanguage" />
+          </Key>
+          <Property Name="IDLanguage" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="LanguageCode" Type="varchar" MaxLength="500" />
+        </EntityType>
+        <EntityType Name="Scenario">
+          <Key>
+            <PropertyRef Name="IDScenario" />
+          </Key>
+          <Property Name="IDScenario" Type="int" Nullable="false" />
+          <Property Name="ScenarioNumber" Type="varchar" MaxLength="500" />
+        </EntityType>
+        <EntityType Name="ScenarioIG">
+          <Key>
+            <PropertyRef Name="IDScenarioIG" />
+          </Key>
+          <Property Name="IDScenarioIG" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IDScenarioInfo" Type="int" />
+        </EntityType>
+        <EntityType Name="ScenarioIGSubTitle">
+          <Key>
+            <PropertyRef Name="IDScenarioIGSubTitle" />
+          </Key>
+          <Property Name="IDScenarioIGSubTitle" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IDScenarioIGTitle" Type="int" />
+          <Property Name="IDBulletPoints" Type="int" />
+          <Property Name="Content" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="ScenarioIGSubTitleBullets">
+          <Key>
+            <PropertyRef Name="IDScenarioIGSubTitleBullets" />
+          </Key>
+          <Property Name="IDScenarioIGSubTitleBullets" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IDScenarioIGSubTitle" Type="int" />
+          <Property Name="IDBulletPoints" Type="int" />
+          <Property Name="Content" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="ScenarioIGTitle">
+          <Key>
+            <PropertyRef Name="IDScenarioIGTitle" />
+          </Key>
+          <Property Name="IDScenarioIGTitle" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IDScenarioIG" Type="int" />
+          <Property Name="Content" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="ScenarioInfo">
+          <Key>
+            <PropertyRef Name="IDScenarioInfo" />
+          </Key>
+          <Property Name="IDScenarioInfo" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IDScenario" Type="int" />
+          <Property Name="IDLanguage" Type="int" />
+          <Property Name="IDSimulatorType" Type="int" />
+          <Property Name="Title" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="ScenarioSlide">
+          <Key>
+            <PropertyRef Name="IDScenarioSlide" />
+          </Key>
+          <Property Name="IDScenarioSlide" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IDScenarioInfo" Type="int" />
+        </EntityType>
+        <EntityType Name="ScenarioSlideSubTitle">
+          <Key>
+            <PropertyRef Name="IDScenarioSlideSubTitle" />
+          </Key>
+          <Property Name="IDScenarioSlideSubTitle" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IDScenarioSlideTitle" Type="int" />
+          <Property Name="IDBulletPoints" Type="int" />
+          <Property Name="Content" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="ScenarioSlideSubTitleBullets">
+          <Key>
+            <PropertyRef Name="IDScenarioSlideSubTitleBullets" />
+          </Key>
+          <Property Name="IDScenarioSlideSubTitleBullets" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IDScenarioSlideSubTitle" Type="int" />
+          <Property Name="IDBulletPoints" Type="int" />
+          <Property Name="Content" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="ScenarioSlideTitle">
+          <Key>
+            <PropertyRef Name="IDScenarioSlideTitle" />
+          </Key>
+          <Property Name="IDScenarioSlideTitle" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IDScenarioSlide" Type="int" />
+          <Property Name="Content" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="SimulatorType">
+          <Key>
+            <PropertyRef Name="IDSimulatorType" />
+          </Key>
+          <Property Name="IDSimulatorType" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SimulatorTypeCode" Type="varchar" MaxLength="500" />
+        </EntityType>
+        <Association Name="FK__ScenarioI__IDBul__4E53A1AA">
+          <End Role="BulletPoints" Type="Self.BulletPoints" Multiplicity="0..1" />
+          <End Role="ScenarioIGSubTitle" Type="Self.ScenarioIGSubTitle" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BulletPoints">
+              <PropertyRef Name="IDBulletPoints" />
+            </Principal>
+            <Dependent Role="ScenarioIGSubTitle">
+              <PropertyRef Name="IDBulletPoints" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ScenarioI__IDBul__531856C7">
+          <End Role="BulletPoints" Type="Self.BulletPoints" Multiplicity="0..1" />
+          <End Role="ScenarioIGSubTitleBullets" Type="Self.ScenarioIGSubTitleBullets" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BulletPoints">
+              <PropertyRef Name="IDBulletPoints" />
+            </Principal>
+            <Dependent Role="ScenarioIGSubTitleBullets">
+              <PropertyRef Name="IDBulletPoints" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ScenarioI__IDLan__3493CFA7">
+          <End Role="Language" Type="Self.Language" Multiplicity="0..1" />
+          <End Role="ScenarioInfo" Type="Self.ScenarioInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Language">
+              <PropertyRef Name="IDLanguage" />
+            </Principal>
+            <Dependent Role="ScenarioInfo">
+              <PropertyRef Name="IDLanguage" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ScenarioI__IDSce__339FAB6E">
+          <End Role="Scenario" Type="Self.Scenario" Multiplicity="0..1" />
+          <End Role="ScenarioInfo" Type="Self.ScenarioInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Scenario">
+              <PropertyRef Name="IDScenario" />
+            </Principal>
+            <Dependent Role="ScenarioInfo">
+              <PropertyRef Name="IDScenario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ScenarioI__IDSce__3B40CD36">
+          <End Role="ScenarioInfo" Type="Self.ScenarioInfo" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ScenarioIG" Type="Self.ScenarioIG" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ScenarioInfo">
+              <PropertyRef Name="IDScenarioInfo" />
+            </Principal>
+            <Dependent Role="ScenarioIG">
+              <PropertyRef Name="IDScenarioInfo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ScenarioI__IDSce__4A8310C6">
+          <End Role="ScenarioIG" Type="Self.ScenarioIG" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ScenarioIGTitle" Type="Self.ScenarioIGTitle" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ScenarioIG">
+              <PropertyRef Name="IDScenarioIG" />
+            </Principal>
+            <Dependent Role="ScenarioIGTitle">
+              <PropertyRef Name="IDScenarioIG" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ScenarioI__IDSce__4D5F7D71">
+          <End Role="ScenarioIGTitle" Type="Self.ScenarioIGTitle" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ScenarioIGSubTitle" Type="Self.ScenarioIGSubTitle" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ScenarioIGTitle">
+              <PropertyRef Name="IDScenarioIGTitle" />
+            </Principal>
+            <Dependent Role="ScenarioIGSubTitle">
+              <PropertyRef Name="IDScenarioIGTitle" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ScenarioI__IDSce__5224328E">
+          <End Role="ScenarioIGSubTitle" Type="Self.ScenarioIGSubTitle" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ScenarioIGSubTitleBullets" Type="Self.ScenarioIGSubTitleBullets" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ScenarioIGSubTitle">
+              <PropertyRef Name="IDScenarioIGSubTitle" />
+            </Principal>
+            <Dependent Role="ScenarioIGSubTitleBullets">
+              <PropertyRef Name="IDScenarioIGSubTitle" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ScenarioI__IDSim__3587F3E0">
+          <End Role="Language" Type="Self.Language" Multiplicity="0..1" />
+          <End Role="ScenarioInfo" Type="Self.ScenarioInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Language">
+              <PropertyRef Name="IDLanguage" />
+            </Principal>
+            <Dependent Role="ScenarioInfo">
+              <PropertyRef Name="IDLanguage" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ScenarioS__IDBul__41EDCAC5">
+          <End Role="BulletPoints" Type="Self.BulletPoints" Multiplicity="0..1" />
+          <End Role="ScenarioSlideSubTitle" Type="Self.ScenarioSlideSubTitle" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BulletPoints">
+              <PropertyRef Name="IDBulletPoints" />
+            </Principal>
+            <Dependent Role="ScenarioSlideSubTitle">
+              <PropertyRef Name="IDBulletPoints" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ScenarioS__IDBul__46B27FE2">
+          <End Role="BulletPoints" Type="Self.BulletPoints" Multiplicity="0..1" />
+          <End Role="ScenarioSlideSubTitleBullets" Type="Self.ScenarioSlideSubTitleBullets" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BulletPoints">
+              <PropertyRef Name="IDBulletPoints" />
+            </Principal>
+            <Dependent Role="ScenarioSlideSubTitleBullets">
+              <PropertyRef Name="IDBulletPoints" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ScenarioS__IDSce__3864608B">
+          <End Role="ScenarioInfo" Type="Self.ScenarioInfo" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ScenarioSlide" Type="Self.ScenarioSlide" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ScenarioInfo">
+              <PropertyRef Name="IDScenarioInfo" />
+            </Principal>
+            <Dependent Role="ScenarioSlide">
+              <PropertyRef Name="IDScenarioInfo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ScenarioS__IDSce__3E1D39E1">
+          <End Role="ScenarioSlide" Type="Self.ScenarioSlide" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ScenarioSlideTitle" Type="Self.ScenarioSlideTitle" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ScenarioSlide">
+              <PropertyRef Name="IDScenarioSlide" />
+            </Principal>
+            <Dependent Role="ScenarioSlideTitle">
+              <PropertyRef Name="IDScenarioSlide" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ScenarioS__IDSce__40F9A68C">
+          <End Role="ScenarioSlideTitle" Type="Self.ScenarioSlideTitle" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ScenarioSlideSubTitle" Type="Self.ScenarioSlideSubTitle" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ScenarioSlideTitle">
+              <PropertyRef Name="IDScenarioSlideTitle" />
+            </Principal>
+            <Dependent Role="ScenarioSlideSubTitle">
+              <PropertyRef Name="IDScenarioSlideTitle" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ScenarioS__IDSce__45BE5BA9">
+          <End Role="ScenarioSlideSubTitle" Type="Self.ScenarioSlideSubTitle" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ScenarioSlideSubTitleBullets" Type="Self.ScenarioSlideSubTitleBullets" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ScenarioSlideSubTitle">
+              <PropertyRef Name="IDScenarioSlideSubTitle" />
+            </Principal>
+            <Dependent Role="ScenarioSlideSubTitleBullets">
+              <PropertyRef Name="IDScenarioSlideSubTitle" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="SlideIGWebModelStoreContainer">
+          <EntitySet Name="BulletPoints" EntityType="Self.BulletPoints" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Language" EntityType="Self.Language" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Scenario" EntityType="Self.Scenario" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ScenarioIG" EntityType="Self.ScenarioIG" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ScenarioIGSubTitle" EntityType="Self.ScenarioIGSubTitle" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ScenarioIGSubTitleBullets" EntityType="Self.ScenarioIGSubTitleBullets" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ScenarioIGTitle" EntityType="Self.ScenarioIGTitle" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ScenarioInfo" EntityType="Self.ScenarioInfo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ScenarioSlide" EntityType="Self.ScenarioSlide" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ScenarioSlideSubTitle" EntityType="Self.ScenarioSlideSubTitle" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ScenarioSlideSubTitleBullets" EntityType="Self.ScenarioSlideSubTitleBullets" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ScenarioSlideTitle" EntityType="Self.ScenarioSlideTitle" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SimulatorType" EntityType="Self.SimulatorType" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__ScenarioI__IDBul__4E53A1AA" Association="Self.FK__ScenarioI__IDBul__4E53A1AA">
+            <End Role="BulletPoints" EntitySet="BulletPoints" />
+            <End Role="ScenarioIGSubTitle" EntitySet="ScenarioIGSubTitle" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ScenarioI__IDBul__531856C7" Association="Self.FK__ScenarioI__IDBul__531856C7">
+            <End Role="BulletPoints" EntitySet="BulletPoints" />
+            <End Role="ScenarioIGSubTitleBullets" EntitySet="ScenarioIGSubTitleBullets" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ScenarioI__IDLan__3493CFA7" Association="Self.FK__ScenarioI__IDLan__3493CFA7">
+            <End Role="Language" EntitySet="Language" />
+            <End Role="ScenarioInfo" EntitySet="ScenarioInfo" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ScenarioI__IDSce__339FAB6E" Association="Self.FK__ScenarioI__IDSce__339FAB6E">
+            <End Role="Scenario" EntitySet="Scenario" />
+            <End Role="ScenarioInfo" EntitySet="ScenarioInfo" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ScenarioI__IDSce__3B40CD36" Association="Self.FK__ScenarioI__IDSce__3B40CD36">
+            <End Role="ScenarioInfo" EntitySet="ScenarioInfo" />
+            <End Role="ScenarioIG" EntitySet="ScenarioIG" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ScenarioI__IDSce__4A8310C6" Association="Self.FK__ScenarioI__IDSce__4A8310C6">
+            <End Role="ScenarioIG" EntitySet="ScenarioIG" />
+            <End Role="ScenarioIGTitle" EntitySet="ScenarioIGTitle" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ScenarioI__IDSce__4D5F7D71" Association="Self.FK__ScenarioI__IDSce__4D5F7D71">
+            <End Role="ScenarioIGTitle" EntitySet="ScenarioIGTitle" />
+            <End Role="ScenarioIGSubTitle" EntitySet="ScenarioIGSubTitle" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ScenarioI__IDSce__5224328E" Association="Self.FK__ScenarioI__IDSce__5224328E">
+            <End Role="ScenarioIGSubTitle" EntitySet="ScenarioIGSubTitle" />
+            <End Role="ScenarioIGSubTitleBullets" EntitySet="ScenarioIGSubTitleBullets" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ScenarioI__IDSim__3587F3E0" Association="Self.FK__ScenarioI__IDSim__3587F3E0">
+            <End Role="Language" EntitySet="Language" />
+            <End Role="ScenarioInfo" EntitySet="ScenarioInfo" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ScenarioS__IDBul__41EDCAC5" Association="Self.FK__ScenarioS__IDBul__41EDCAC5">
+            <End Role="BulletPoints" EntitySet="BulletPoints" />
+            <End Role="ScenarioSlideSubTitle" EntitySet="ScenarioSlideSubTitle" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ScenarioS__IDBul__46B27FE2" Association="Self.FK__ScenarioS__IDBul__46B27FE2">
+            <End Role="BulletPoints" EntitySet="BulletPoints" />
+            <End Role="ScenarioSlideSubTitleBullets" EntitySet="ScenarioSlideSubTitleBullets" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ScenarioS__IDSce__3864608B" Association="Self.FK__ScenarioS__IDSce__3864608B">
+            <End Role="ScenarioInfo" EntitySet="ScenarioInfo" />
+            <End Role="ScenarioSlide" EntitySet="ScenarioSlide" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ScenarioS__IDSce__3E1D39E1" Association="Self.FK__ScenarioS__IDSce__3E1D39E1">
+            <End Role="ScenarioSlide" EntitySet="ScenarioSlide" />
+            <End Role="ScenarioSlideTitle" EntitySet="ScenarioSlideTitle" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ScenarioS__IDSce__40F9A68C" Association="Self.FK__ScenarioS__IDSce__40F9A68C">
+            <End Role="ScenarioSlideTitle" EntitySet="ScenarioSlideTitle" />
+            <End Role="ScenarioSlideSubTitle" EntitySet="ScenarioSlideSubTitle" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ScenarioS__IDSce__45BE5BA9" Association="Self.FK__ScenarioS__IDSce__45BE5BA9">
+            <End Role="ScenarioSlideSubTitle" EntitySet="ScenarioSlideSubTitle" />
+            <End Role="ScenarioSlideSubTitleBullets" EntitySet="ScenarioSlideSubTitleBullets" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="SlideIGWebModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="BulletPoint">
+          <Key>
+            <PropertyRef Name="IDBulletPoints" />
+          </Key>
+          <Property Name="IDBulletPoints" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Unicode" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="ClassContent" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="ScenarioIGSubTitles" Relationship="Self.FK__ScenarioI__IDBul__40DA7652" FromRole="BulletPoints" ToRole="ScenarioIGSubTitle" />
+          <NavigationProperty Name="ScenarioIGSubTitleBullets" Relationship="Self.FK__ScenarioI__IDBul__459F2B6F" FromRole="BulletPoints" ToRole="ScenarioIGSubTitleBullets" />
+          <NavigationProperty Name="ScenarioSlideSubTitles" Relationship="Self.FK__ScenarioS__IDBul__34749F6D" FromRole="BulletPoints" ToRole="ScenarioSlideSubTitle" />
+          <NavigationProperty Name="ScenarioSlideSubTitleBullets" Relationship="Self.FK__ScenarioS__IDBul__3939548A" FromRole="BulletPoints" ToRole="ScenarioSlideSubTitleBullets" />
+        </EntityType>
+        <EntityType Name="Language">
+          <Key>
+            <PropertyRef Name="IDLanguage" />
+          </Key>
+          <Property Name="IDLanguage" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="LanguageCode" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="ScenarioInfoes" Relationship="Self.FK__ScenarioI__IDLan__271AA44F" FromRole="Language" ToRole="ScenarioInfo" />
+          <NavigationProperty Name="ScenarioInfoes1" Relationship="Self.FK__ScenarioI__IDSim__280EC888" FromRole="Language" ToRole="ScenarioInfo" />
+        </EntityType>
+        <EntityType Name="Scenario">
+          <Key>
+            <PropertyRef Name="IDScenario" />
+          </Key>
+          <Property Name="IDScenario" Type="Int32" Nullable="false" />
+          <Property Name="ScenarioNumber" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="ScenarioInfoes" Relationship="Self.FK__ScenarioI__IDSce__26268016" FromRole="Scenario" ToRole="ScenarioInfo" />
+        </EntityType>
+        <EntityType Name="ScenarioIG">
+          <Key>
+            <PropertyRef Name="IDScenarioIG" />
+          </Key>
+          <Property Name="IDScenarioIG" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IDScenarioInfo" Type="Int32" />
+          <NavigationProperty Name="ScenarioInfo" Relationship="Self.FK__ScenarioI__IDSce__2DC7A1DE" FromRole="ScenarioIG" ToRole="ScenarioInfo" />
+          <NavigationProperty Name="ScenarioIGTitles" Relationship="Self.FK__ScenarioI__IDSce__3D09E56E" FromRole="ScenarioIG" ToRole="ScenarioIGTitle" />
+        </EntityType>
+        <EntityType Name="ScenarioIGSubTitle">
+          <Key>
+            <PropertyRef Name="IDScenarioIGSubTitle" />
+          </Key>
+          <Property Name="IDScenarioIGSubTitle" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IDScenarioIGTitle" Type="Int32" />
+          <Property Name="IDBulletPoints" Type="Int32" />
+          <Property Name="Content" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="BulletPoint" Relationship="Self.FK__ScenarioI__IDBul__40DA7652" FromRole="ScenarioIGSubTitle" ToRole="BulletPoints" />
+          <NavigationProperty Name="ScenarioIGTitle" Relationship="Self.FK__ScenarioI__IDSce__3FE65219" FromRole="ScenarioIGSubTitle" ToRole="ScenarioIGTitle" />
+          <NavigationProperty Name="ScenarioIGSubTitleBullets" Relationship="Self.FK__ScenarioI__IDSce__44AB0736" FromRole="ScenarioIGSubTitle" ToRole="ScenarioIGSubTitleBullets" />
+        </EntityType>
+        <EntityType Name="ScenarioIGSubTitleBullet">
+          <Key>
+            <PropertyRef Name="IDScenarioIGSubTitleBullets" />
+          </Key>
+          <Property Name="IDScenarioIGSubTitleBullets" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IDScenarioIGSubTitle" Type="Int32" />
+          <Property Name="IDBulletPoints" Type="Int32" />
+          <Property Name="Content" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="BulletPoint" Relationship="Self.FK__ScenarioI__IDBul__459F2B6F" FromRole="ScenarioIGSubTitleBullets" ToRole="BulletPoints" />
+          <NavigationProperty Name="ScenarioIGSubTitle" Relationship="Self.FK__ScenarioI__IDSce__44AB0736" FromRole="ScenarioIGSubTitleBullets" ToRole="ScenarioIGSubTitle" />
+        </EntityType>
+        <EntityType Name="ScenarioIGTitle">
+          <Key>
+            <PropertyRef Name="IDScenarioIGTitle" />
+          </Key>
+          <Property Name="IDScenarioIGTitle" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IDScenarioIG" Type="Int32" />
+          <Property Name="Content" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="ScenarioIG" Relationship="Self.FK__ScenarioI__IDSce__3D09E56E" FromRole="ScenarioIGTitle" ToRole="ScenarioIG" />
+          <NavigationProperty Name="ScenarioIGSubTitles" Relationship="Self.FK__ScenarioI__IDSce__3FE65219" FromRole="ScenarioIGTitle" ToRole="ScenarioIGSubTitle" />
+        </EntityType>
+        <EntityType Name="ScenarioInfo">
+          <Key>
+            <PropertyRef Name="IDScenarioInfo" />
+          </Key>
+          <Property Name="IDScenarioInfo" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IDScenario" Type="Int32" />
+          <Property Name="IDLanguage" Type="Int32" />
+          <Property Name="IDSimulatorType" Type="Int32" />
+          <Property Name="Title" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Language" Relationship="Self.FK__ScenarioI__IDLan__271AA44F" FromRole="ScenarioInfo" ToRole="Language" />
+          <NavigationProperty Name="Language1" Relationship="Self.FK__ScenarioI__IDSim__280EC888" FromRole="ScenarioInfo" ToRole="Language" />
+          <NavigationProperty Name="Scenario" Relationship="Self.FK__ScenarioI__IDSce__26268016" FromRole="ScenarioInfo" ToRole="Scenario" />
+          <NavigationProperty Name="ScenarioIGs" Relationship="Self.FK__ScenarioI__IDSce__2DC7A1DE" FromRole="ScenarioInfo" ToRole="ScenarioIG" />
+          <NavigationProperty Name="ScenarioSlides" Relationship="Self.FK__ScenarioS__IDSce__2AEB3533" FromRole="ScenarioInfo" ToRole="ScenarioSlide" />
+        </EntityType>
+        <EntityType Name="ScenarioSlide">
+          <Key>
+            <PropertyRef Name="IDScenarioSlide" />
+          </Key>
+          <Property Name="IDScenarioSlide" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IDScenarioInfo" Type="Int32" />
+          <NavigationProperty Name="ScenarioInfo" Relationship="Self.FK__ScenarioS__IDSce__2AEB3533" FromRole="ScenarioSlide" ToRole="ScenarioInfo" />
+          <NavigationProperty Name="ScenarioSlideTitles" Relationship="Self.FK__ScenarioS__IDSce__30A40E89" FromRole="ScenarioSlide" ToRole="ScenarioSlideTitle" />
+        </EntityType>
+        <EntityType Name="ScenarioSlideSubTitle">
+          <Key>
+            <PropertyRef Name="IDScenarioSlideSubTitle" />
+          </Key>
+          <Property Name="IDScenarioSlideSubTitle" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IDScenarioSlideTitle" Type="Int32" />
+          <Property Name="IDBulletPoints" Type="Int32" />
+          <Property Name="Content" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="BulletPoint" Relationship="Self.FK__ScenarioS__IDBul__34749F6D" FromRole="ScenarioSlideSubTitle" ToRole="BulletPoints" />
+          <NavigationProperty Name="ScenarioSlideTitle" Relationship="Self.FK__ScenarioS__IDSce__33807B34" FromRole="ScenarioSlideSubTitle" ToRole="ScenarioSlideTitle" />
+          <NavigationProperty Name="ScenarioSlideSubTitleBullets" Relationship="Self.FK__ScenarioS__IDSce__38453051" FromRole="ScenarioSlideSubTitle" ToRole="ScenarioSlideSubTitleBullets" />
+        </EntityType>
+        <EntityType Name="ScenarioSlideSubTitleBullet">
+          <Key>
+            <PropertyRef Name="IDScenarioSlideSubTitleBullets" />
+          </Key>
+          <Property Name="IDScenarioSlideSubTitleBullets" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IDScenarioSlideSubTitle" Type="Int32" />
+          <Property Name="IDBulletPoints" Type="Int32" />
+          <Property Name="Content" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="BulletPoint" Relationship="Self.FK__ScenarioS__IDBul__3939548A" FromRole="ScenarioSlideSubTitleBullets" ToRole="BulletPoints" />
+          <NavigationProperty Name="ScenarioSlideSubTitle" Relationship="Self.FK__ScenarioS__IDSce__38453051" FromRole="ScenarioSlideSubTitleBullets" ToRole="ScenarioSlideSubTitle" />
+        </EntityType>
+        <EntityType Name="ScenarioSlideTitle">
+          <Key>
+            <PropertyRef Name="IDScenarioSlideTitle" />
+          </Key>
+          <Property Name="IDScenarioSlideTitle" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IDScenarioSlide" Type="Int32" />
+          <Property Name="Content" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="ScenarioSlide" Relationship="Self.FK__ScenarioS__IDSce__30A40E89" FromRole="ScenarioSlideTitle" ToRole="ScenarioSlide" />
+          <NavigationProperty Name="ScenarioSlideSubTitles" Relationship="Self.FK__ScenarioS__IDSce__33807B34" FromRole="ScenarioSlideTitle" ToRole="ScenarioSlideSubTitle" />
+        </EntityType>
+        <EntityType Name="SimulatorType">
+          <Key>
+            <PropertyRef Name="IDSimulatorType" />
+          </Key>
+          <Property Name="IDSimulatorType" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SimulatorTypeCode" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <Association Name="FK__ScenarioI__IDBul__40DA7652">
+          <End Role="BulletPoints" Type="Self.BulletPoint" Multiplicity="0..1" />
+          <End Role="ScenarioIGSubTitle" Type="Self.ScenarioIGSubTitle" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BulletPoints">
+              <PropertyRef Name="IDBulletPoints" />
+            </Principal>
+            <Dependent Role="ScenarioIGSubTitle">
+              <PropertyRef Name="IDBulletPoints" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ScenarioI__IDBul__459F2B6F">
+          <End Role="BulletPoints" Type="Self.BulletPoint" Multiplicity="0..1" />
+          <End Role="ScenarioIGSubTitleBullets" Type="Self.ScenarioIGSubTitleBullet" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BulletPoints">
+              <PropertyRef Name="IDBulletPoints" />
+            </Principal>
+            <Dependent Role="ScenarioIGSubTitleBullets">
+              <PropertyRef Name="IDBulletPoints" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ScenarioS__IDBul__34749F6D">
+          <End Role="BulletPoints" Type="Self.BulletPoint" Multiplicity="0..1" />
+          <End Role="ScenarioSlideSubTitle" Type="Self.ScenarioSlideSubTitle" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BulletPoints">
+              <PropertyRef Name="IDBulletPoints" />
+            </Principal>
+            <Dependent Role="ScenarioSlideSubTitle">
+              <PropertyRef Name="IDBulletPoints" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ScenarioS__IDBul__3939548A">
+          <End Role="BulletPoints" Type="Self.BulletPoint" Multiplicity="0..1" />
+          <End Role="ScenarioSlideSubTitleBullets" Type="Self.ScenarioSlideSubTitleBullet" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BulletPoints">
+              <PropertyRef Name="IDBulletPoints" />
+            </Principal>
+            <Dependent Role="ScenarioSlideSubTitleBullets">
+              <PropertyRef Name="IDBulletPoints" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ScenarioI__IDLan__271AA44F">
+          <End Role="Language" Type="Self.Language" Multiplicity="0..1" />
+          <End Role="ScenarioInfo" Type="Self.ScenarioInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Language">
+              <PropertyRef Name="IDLanguage" />
+            </Principal>
+            <Dependent Role="ScenarioInfo">
+              <PropertyRef Name="IDLanguage" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ScenarioI__IDSim__280EC888">
+          <End Role="Language" Type="Self.Language" Multiplicity="0..1" />
+          <End Role="ScenarioInfo" Type="Self.ScenarioInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Language">
+              <PropertyRef Name="IDLanguage" />
+            </Principal>
+            <Dependent Role="ScenarioInfo">
+              <PropertyRef Name="IDLanguage" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ScenarioI__IDSce__26268016">
+          <End Role="Scenario" Type="Self.Scenario" Multiplicity="0..1" />
+          <End Role="ScenarioInfo" Type="Self.ScenarioInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Scenario">
+              <PropertyRef Name="IDScenario" />
+            </Principal>
+            <Dependent Role="ScenarioInfo">
+              <PropertyRef Name="IDScenario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ScenarioI__IDSce__2DC7A1DE">
+          <End Role="ScenarioInfo" Type="Self.ScenarioInfo" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ScenarioIG" Type="Self.ScenarioIG" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ScenarioInfo">
+              <PropertyRef Name="IDScenarioInfo" />
+            </Principal>
+            <Dependent Role="ScenarioIG">
+              <PropertyRef Name="IDScenarioInfo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ScenarioI__IDSce__3D09E56E">
+          <End Role="ScenarioIG" Type="Self.ScenarioIG" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ScenarioIGTitle" Type="Self.ScenarioIGTitle" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ScenarioIG">
+              <PropertyRef Name="IDScenarioIG" />
+            </Principal>
+            <Dependent Role="ScenarioIGTitle">
+              <PropertyRef Name="IDScenarioIG" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ScenarioI__IDSce__3FE65219">
+          <End Role="ScenarioIGTitle" Type="Self.ScenarioIGTitle" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ScenarioIGSubTitle" Type="Self.ScenarioIGSubTitle" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ScenarioIGTitle">
+              <PropertyRef Name="IDScenarioIGTitle" />
+            </Principal>
+            <Dependent Role="ScenarioIGSubTitle">
+              <PropertyRef Name="IDScenarioIGTitle" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ScenarioI__IDSce__44AB0736">
+          <End Role="ScenarioIGSubTitle" Type="Self.ScenarioIGSubTitle" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ScenarioIGSubTitleBullets" Type="Self.ScenarioIGSubTitleBullet" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ScenarioIGSubTitle">
+              <PropertyRef Name="IDScenarioIGSubTitle" />
+            </Principal>
+            <Dependent Role="ScenarioIGSubTitleBullets">
+              <PropertyRef Name="IDScenarioIGSubTitle" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ScenarioS__IDSce__2AEB3533">
+          <End Role="ScenarioInfo" Type="Self.ScenarioInfo" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ScenarioSlide" Type="Self.ScenarioSlide" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ScenarioInfo">
+              <PropertyRef Name="IDScenarioInfo" />
+            </Principal>
+            <Dependent Role="ScenarioSlide">
+              <PropertyRef Name="IDScenarioInfo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ScenarioS__IDSce__30A40E89">
+          <End Role="ScenarioSlide" Type="Self.ScenarioSlide" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ScenarioSlideTitle" Type="Self.ScenarioSlideTitle" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ScenarioSlide">
+              <PropertyRef Name="IDScenarioSlide" />
+            </Principal>
+            <Dependent Role="ScenarioSlideTitle">
+              <PropertyRef Name="IDScenarioSlide" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ScenarioS__IDSce__33807B34">
+          <End Role="ScenarioSlideTitle" Type="Self.ScenarioSlideTitle" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ScenarioSlideSubTitle" Type="Self.ScenarioSlideSubTitle" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ScenarioSlideTitle">
+              <PropertyRef Name="IDScenarioSlideTitle" />
+            </Principal>
+            <Dependent Role="ScenarioSlideSubTitle">
+              <PropertyRef Name="IDScenarioSlideTitle" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ScenarioS__IDSce__38453051">
+          <End Role="ScenarioSlideSubTitle" Type="Self.ScenarioSlideSubTitle" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ScenarioSlideSubTitleBullets" Type="Self.ScenarioSlideSubTitleBullet" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ScenarioSlideSubTitle">
+              <PropertyRef Name="IDScenarioSlideSubTitle" />
+            </Principal>
+            <Dependent Role="ScenarioSlideSubTitleBullets">
+              <PropertyRef Name="IDScenarioSlideSubTitle" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="SlideIGWebEntities1" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="BulletPoints" EntityType="Self.BulletPoint" />
+          <EntitySet Name="Languages" EntityType="Self.Language" />
+          <EntitySet Name="Scenarios" EntityType="Self.Scenario" />
+          <EntitySet Name="ScenarioIGs" EntityType="Self.ScenarioIG" />
+          <EntitySet Name="ScenarioIGSubTitles" EntityType="Self.ScenarioIGSubTitle" />
+          <EntitySet Name="ScenarioIGSubTitleBullets" EntityType="Self.ScenarioIGSubTitleBullet" />
+          <EntitySet Name="ScenarioIGTitles" EntityType="Self.ScenarioIGTitle" />
+          <EntitySet Name="ScenarioInfoes" EntityType="Self.ScenarioInfo" />
+          <EntitySet Name="ScenarioSlides" EntityType="Self.ScenarioSlide" />
+          <EntitySet Name="ScenarioSlideSubTitles" EntityType="Self.ScenarioSlideSubTitle" />
+          <EntitySet Name="ScenarioSlideSubTitleBullets" EntityType="Self.ScenarioSlideSubTitleBullet" />
+          <EntitySet Name="ScenarioSlideTitles" EntityType="Self.ScenarioSlideTitle" />
+          <EntitySet Name="SimulatorTypes" EntityType="Self.SimulatorType" />
+          <AssociationSet Name="FK__ScenarioI__IDBul__40DA7652" Association="Self.FK__ScenarioI__IDBul__40DA7652">
+            <End Role="BulletPoints" EntitySet="BulletPoints" />
+            <End Role="ScenarioIGSubTitle" EntitySet="ScenarioIGSubTitles" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ScenarioI__IDBul__459F2B6F" Association="Self.FK__ScenarioI__IDBul__459F2B6F">
+            <End Role="BulletPoints" EntitySet="BulletPoints" />
+            <End Role="ScenarioIGSubTitleBullets" EntitySet="ScenarioIGSubTitleBullets" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ScenarioS__IDBul__34749F6D" Association="Self.FK__ScenarioS__IDBul__34749F6D">
+            <End Role="BulletPoints" EntitySet="BulletPoints" />
+            <End Role="ScenarioSlideSubTitle" EntitySet="ScenarioSlideSubTitles" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ScenarioS__IDBul__3939548A" Association="Self.FK__ScenarioS__IDBul__3939548A">
+            <End Role="BulletPoints" EntitySet="BulletPoints" />
+            <End Role="ScenarioSlideSubTitleBullets" EntitySet="ScenarioSlideSubTitleBullets" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ScenarioI__IDLan__271AA44F" Association="Self.FK__ScenarioI__IDLan__271AA44F">
+            <End Role="Language" EntitySet="Languages" />
+            <End Role="ScenarioInfo" EntitySet="ScenarioInfoes" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ScenarioI__IDSim__280EC888" Association="Self.FK__ScenarioI__IDSim__280EC888">
+            <End Role="Language" EntitySet="Languages" />
+            <End Role="ScenarioInfo" EntitySet="ScenarioInfoes" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ScenarioI__IDSce__26268016" Association="Self.FK__ScenarioI__IDSce__26268016">
+            <End Role="Scenario" EntitySet="Scenarios" />
+            <End Role="ScenarioInfo" EntitySet="ScenarioInfoes" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ScenarioI__IDSce__2DC7A1DE" Association="Self.FK__ScenarioI__IDSce__2DC7A1DE">
+            <End Role="ScenarioInfo" EntitySet="ScenarioInfoes" />
+            <End Role="ScenarioIG" EntitySet="ScenarioIGs" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ScenarioI__IDSce__3D09E56E" Association="Self.FK__ScenarioI__IDSce__3D09E56E">
+            <End Role="ScenarioIG" EntitySet="ScenarioIGs" />
+            <End Role="ScenarioIGTitle" EntitySet="ScenarioIGTitles" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ScenarioI__IDSce__3FE65219" Association="Self.FK__ScenarioI__IDSce__3FE65219">
+            <End Role="ScenarioIGTitle" EntitySet="ScenarioIGTitles" />
+            <End Role="ScenarioIGSubTitle" EntitySet="ScenarioIGSubTitles" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ScenarioI__IDSce__44AB0736" Association="Self.FK__ScenarioI__IDSce__44AB0736">
+            <End Role="ScenarioIGSubTitle" EntitySet="ScenarioIGSubTitles" />
+            <End Role="ScenarioIGSubTitleBullets" EntitySet="ScenarioIGSubTitleBullets" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ScenarioS__IDSce__2AEB3533" Association="Self.FK__ScenarioS__IDSce__2AEB3533">
+            <End Role="ScenarioInfo" EntitySet="ScenarioInfoes" />
+            <End Role="ScenarioSlide" EntitySet="ScenarioSlides" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ScenarioS__IDSce__30A40E89" Association="Self.FK__ScenarioS__IDSce__30A40E89">
+            <End Role="ScenarioSlide" EntitySet="ScenarioSlides" />
+            <End Role="ScenarioSlideTitle" EntitySet="ScenarioSlideTitles" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ScenarioS__IDSce__33807B34" Association="Self.FK__ScenarioS__IDSce__33807B34">
+            <End Role="ScenarioSlideTitle" EntitySet="ScenarioSlideTitles" />
+            <End Role="ScenarioSlideSubTitle" EntitySet="ScenarioSlideSubTitles" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ScenarioS__IDSce__38453051" Association="Self.FK__ScenarioS__IDSce__38453051">
+            <End Role="ScenarioSlideSubTitle" EntitySet="ScenarioSlideSubTitles" />
+            <End Role="ScenarioSlideSubTitleBullets" EntitySet="ScenarioSlideSubTitleBullets" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="SlideIGWebModelStoreContainer" CdmEntityContainer="SlideIGWebEntities1">
+          <EntitySetMapping Name="BulletPoints">
+            <EntityTypeMapping TypeName="SlideIGWebModel.BulletPoint">
+              <MappingFragment StoreEntitySet="BulletPoints">
+                <ScalarProperty Name="IDBulletPoints" ColumnName="IDBulletPoints" />
+                <ScalarProperty Name="Unicode" ColumnName="Unicode" />
+                <ScalarProperty Name="ClassContent" ColumnName="ClassContent" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Languages">
+            <EntityTypeMapping TypeName="SlideIGWebModel.Language">
+              <MappingFragment StoreEntitySet="Language">
+                <ScalarProperty Name="IDLanguage" ColumnName="IDLanguage" />
+                <ScalarProperty Name="LanguageCode" ColumnName="LanguageCode" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Scenarios">
+            <EntityTypeMapping TypeName="SlideIGWebModel.Scenario">
+              <MappingFragment StoreEntitySet="Scenario">
+                <ScalarProperty Name="IDScenario" ColumnName="IDScenario" />
+                <ScalarProperty Name="ScenarioNumber" ColumnName="ScenarioNumber" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ScenarioIGs">
+            <EntityTypeMapping TypeName="SlideIGWebModel.ScenarioIG">
+              <MappingFragment StoreEntitySet="ScenarioIG">
+                <ScalarProperty Name="IDScenarioIG" ColumnName="IDScenarioIG" />
+                <ScalarProperty Name="IDScenarioInfo" ColumnName="IDScenarioInfo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ScenarioIGSubTitles">
+            <EntityTypeMapping TypeName="SlideIGWebModel.ScenarioIGSubTitle">
+              <MappingFragment StoreEntitySet="ScenarioIGSubTitle">
+                <ScalarProperty Name="IDScenarioIGSubTitle" ColumnName="IDScenarioIGSubTitle" />
+                <ScalarProperty Name="IDScenarioIGTitle" ColumnName="IDScenarioIGTitle" />
+                <ScalarProperty Name="IDBulletPoints" ColumnName="IDBulletPoints" />
+                <ScalarProperty Name="Content" ColumnName="Content" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ScenarioIGSubTitleBullets">
+            <EntityTypeMapping TypeName="SlideIGWebModel.ScenarioIGSubTitleBullet">
+              <MappingFragment StoreEntitySet="ScenarioIGSubTitleBullets">
+                <ScalarProperty Name="IDScenarioIGSubTitleBullets" ColumnName="IDScenarioIGSubTitleBullets" />
+                <ScalarProperty Name="IDScenarioIGSubTitle" ColumnName="IDScenarioIGSubTitle" />
+                <ScalarProperty Name="IDBulletPoints" ColumnName="IDBulletPoints" />
+                <ScalarProperty Name="Content" ColumnName="Content" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ScenarioIGTitles">
+            <EntityTypeMapping TypeName="SlideIGWebModel.ScenarioIGTitle">
+              <MappingFragment StoreEntitySet="ScenarioIGTitle">
+                <ScalarProperty Name="IDScenarioIGTitle" ColumnName="IDScenarioIGTitle" />
+                <ScalarProperty Name="IDScenarioIG" ColumnName="IDScenarioIG" />
+                <ScalarProperty Name="Content" ColumnName="Content" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ScenarioInfoes">
+            <EntityTypeMapping TypeName="SlideIGWebModel.ScenarioInfo">
+              <MappingFragment StoreEntitySet="ScenarioInfo">
+                <ScalarProperty Name="IDScenarioInfo" ColumnName="IDScenarioInfo" />
+                <ScalarProperty Name="IDScenario" ColumnName="IDScenario" />
+                <ScalarProperty Name="IDLanguage" ColumnName="IDLanguage" />
+                <ScalarProperty Name="IDSimulatorType" ColumnName="IDSimulatorType" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ScenarioSlides">
+            <EntityTypeMapping TypeName="SlideIGWebModel.ScenarioSlide">
+              <MappingFragment StoreEntitySet="ScenarioSlide">
+                <ScalarProperty Name="IDScenarioSlide" ColumnName="IDScenarioSlide" />
+                <ScalarProperty Name="IDScenarioInfo" ColumnName="IDScenarioInfo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ScenarioSlideSubTitles">
+            <EntityTypeMapping TypeName="SlideIGWebModel.ScenarioSlideSubTitle">
+              <MappingFragment StoreEntitySet="ScenarioSlideSubTitle">
+                <ScalarProperty Name="IDScenarioSlideSubTitle" ColumnName="IDScenarioSlideSubTitle" />
+                <ScalarProperty Name="IDScenarioSlideTitle" ColumnName="IDScenarioSlideTitle" />
+                <ScalarProperty Name="IDBulletPoints" ColumnName="IDBulletPoints" />
+                <ScalarProperty Name="Content" ColumnName="Content" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ScenarioSlideSubTitleBullets">
+            <EntityTypeMapping TypeName="SlideIGWebModel.ScenarioSlideSubTitleBullet">
+              <MappingFragment StoreEntitySet="ScenarioSlideSubTitleBullets">
+                <ScalarProperty Name="IDScenarioSlideSubTitleBullets" ColumnName="IDScenarioSlideSubTitleBullets" />
+                <ScalarProperty Name="IDScenarioSlideSubTitle" ColumnName="IDScenarioSlideSubTitle" />
+                <ScalarProperty Name="IDBulletPoints" ColumnName="IDBulletPoints" />
+                <ScalarProperty Name="Content" ColumnName="Content" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ScenarioSlideTitles">
+            <EntityTypeMapping TypeName="SlideIGWebModel.ScenarioSlideTitle">
+              <MappingFragment StoreEntitySet="ScenarioSlideTitle">
+                <ScalarProperty Name="IDScenarioSlideTitle" ColumnName="IDScenarioSlideTitle" />
+                <ScalarProperty Name="IDScenarioSlide" ColumnName="IDScenarioSlide" />
+                <ScalarProperty Name="Content" ColumnName="Content" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SimulatorTypes">
+            <EntityTypeMapping TypeName="SlideIGWebModel.SimulatorType">
+              <MappingFragment StoreEntitySet="SimulatorType">
+                <ScalarProperty Name="IDSimulatorType" ColumnName="IDSimulatorType" />
+                <ScalarProperty Name="SimulatorTypeCode" ColumnName="SimulatorTypeCode" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

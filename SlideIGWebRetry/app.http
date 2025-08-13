@@ -1,0 +1,286 @@
+﻿@host = http://localhost:55475/api
+
+PUT {{host}}/APIScenario/PutScenarioJson/853/vs600/ar
+Content-Type: application/json
+{"IDScenarioInfo":3439,"IDScenario":853,"IDLanguage":4,"IDSimulatorType":2,"Title":"دائرة إعادة التزويد بالوقود","Language":null,"Language1":null,"Scenario":null,"ScenarioIGs":[{"IDScenarioIG":3391,"IDScenarioInfo":3439,"ScenarioInfo":null,"ScenarioIGTitles":[{"IDScenarioIGTitle":18130,"IDScenarioIG":3391,"Content":"<b>Objectives:</b> ","ScenarioIG":null,"ScenarioIGSubTitles":[{"IDScenarioIGSubTitle":19474,"IDScenarioIGTitle":18130,"IDBulletPoints":1,"Content":"Practice maneuvering inside a garage.","BulletPoint":null,"ScenarioIGTitle":null,"ScenarioIGSubTitleBullets":[]}]},{"IDScenarioIGTitle":18131,"IDScenarioIG":3391,"Content":"<b>Duration:</b> Unlimited","ScenarioIG":null,"ScenarioIGSubTitles":[]},{"IDScenarioIGTitle":18132,"IDScenarioIG":3391,"Content":"<b>Pre-requisites:</b> Basic driving skills","ScenarioIG":null,"ScenarioIGSubTitles":[]},{"IDScenarioIGTitle":18133,"IDScenarioIG":3391,"Content":"<b>Context:</b> Garage interior","ScenarioIG":null,"ScenarioIGSubTitles":[]},{"IDScenarioIGTitle":18134,"IDScenarioIG":3391,"Content":"<b>Simulation aid(s):</b> ","ScenarioIG":null,"ScenarioIGSubTitles":[{"IDScenarioIGSubTitle":19475,"IDScenarioIGTitle":18134,"IDBulletPoints":1,"Content":"<b><i>Helicopter view</i></b> - Activated by stopping and activating the hazard lights","BulletPoint":null,"ScenarioIGTitle":null,"ScenarioIGSubTitleBullets":[]}]},{"IDScenarioIGTitle":18135,"IDScenarioIG":3391,"Content":"<b>Session stops condition:</b> ","ScenarioIG":null,"ScenarioIGSubTitles":[{"IDScenarioIGSubTitle":19476,"IDScenarioIGTitle":18135,"IDBulletPoints":1,"Content":"Instructor’s judgment","BulletPoint":null,"ScenarioIGTitle":null,"ScenarioIGSubTitleBullets":[]}]},{"IDScenarioIGTitle":18136,"IDScenarioIG":3391,"Content":"<b>Evaluation criteria:</b> Instructor’s judgment ","ScenarioIG":null,"ScenarioIGSubTitles":[]},{"IDScenarioIGTitle":18137,"IDScenarioIG":3391,"Content":"<b>Notes to instructor:</b> ","ScenarioIG":null,"ScenarioIGSubTitles":[{"IDScenarioIGSubTitle":19477,"IDScenarioIGTitle":18137,"IDBulletPoints":1,"Content":"Ask the driver to park in any available space and turn off the motor for a helicopter view.","BulletPoint":null,"ScenarioIGTitle":null,"ScenarioIGSubTitleBullets":[]},{"IDScenarioIGSubTitle":19478,"IDScenarioIGTitle":18137,"IDBulletPoints":1,"Content":"Each time the driver repeats this sequence, different challenges will be presented.","BulletPoint":null,"ScenarioIGTitle":null,"ScenarioIGSubTitleBullets":[]},{"IDScenarioIGSubTitle":19479,"IDScenarioIGTitle":18137,"IDBulletPoints":1,"Content":"Instruct the driver to leave the refueling area, pass the bus wash station and drive through the assigned row to return to the refueling area.","BulletPoint":null,"ScenarioIGTitle":null,"ScenarioIGSubTitleBullets":[]}]}]}],"ScenarioSlides":[{"IDScenarioSlide":3437,"IDScenarioInfo":3439,"ScenarioInfo":null,"ScenarioSlideTitles":[{"IDScenarioSlideTitle":6043,"IDScenarioSlide":3437,"Content":"<b>Objectives:</b> ","ScenarioSlide":null,"ScenarioSlideSubTitles":[{"IDScenarioSlideSubTitle":11795,"IDScenarioSlideTitle":6043,"IDBulletPoints":1,"Content":"Practice basic maneuvers inside the garage.","BulletPoint":null,"ScenarioSlideTitle":null,"ScenarioSlideSubTitleBullets":[]}]},{"IDScenarioSlideTitle":6044,"IDScenarioSlide":3437,"Content":"<b>Instructions:</b> ","ScenarioSlide":null,"ScenarioSlideSubTitles":[{"IDScenarioSlideSubTitle":11796,"IDScenarioSlideTitle":6044,"IDBulletPoints":1,"Content":"After leaving the refueling area, you must pass the bus wash station and drive through the assigned row to return to the refueling area.","BulletPoint":null,"ScenarioSlideTitle":null,"ScenarioSlideSubTitleBullets":[]},{"IDScenarioSlideSubTitle":11797,"IDScenarioSlideTitle":6044,"IDBulletPoints":1,"Content":"After returning to the refueling area, park in any available space and turn off the motor for a helicopter view.","BulletPoint":null,"ScenarioSlideTitle":null,"ScenarioSlideSubTitleBullets":[]},{"IDScenarioSlideSubTitle":11798,"IDScenarioSlideTitle":6044,"IDBulletPoints":1,"Content":"Different challenges will be presented each time you repeat this sequence.","BulletPoint":null,"ScenarioSlideTitle":null,"ScenarioSlideSubTitleBullets":[]}]}]}]}
+
+
+
+{
+  "idScenarioInfo": 3170,
+  "idScenario": 454,
+  "idLanguage": 4,
+  "idSimulatorType": 2,
+  "title": "الاستعداد الصباحي",
+  "language": null,
+  "language1": null,
+  "scenario": null,
+  "scenarioIGs": [
+    {
+      "idScenarioIG": 3132,
+      "idScenarioInfo": 3170,
+      "scenarioInfo": null,
+      "scenarioIGTitles": [
+        {
+          "idScenarioIGTitle": 16141,
+          "idScenarioIG": 3132,
+          "content": "<b>الأهداف:</b> ",
+          "scenarioIG": null,
+          "scenarioIGSubTitles": [
+            {
+              "idScenarioIGSubTitle": 17405,
+              "idScenarioIGTitle": 16141,
+              "idBulletPoints": 1,
+              "content": "للتحقق من الأداء السليم للمحاكي بعد بدء التشغيل",
+              "bulletPoint": null,
+              "scenarioIGTitle": null,
+              "scenarioIGSubTitleBullets": []
+            }
+          ]
+        },
+        {
+          "idScenarioIGTitle": 16142,
+          "idScenarioIG": 3132,
+          "content": "<b>ملاحظات للمدرس:</b> ",
+          "scenarioIG": null,
+          "scenarioIGSubTitles": [
+            {
+              "idScenarioIGSubTitle": 17406,
+              "idScenarioIGTitle": 16142,
+              "idBulletPoints": 1,
+              "content": "معيار النجاح لكل فئة (باستثناء الضوابط):",
+              "bulletPoint": null,
+              "scenarioIGTitle": null,
+              "scenarioIGSubTitleBullets": [
+                {
+                  "idScenarioIGSubTitleBullets": 1715,
+                  "idScenarioIGSubTitle": 17406,
+                  "idBulletPoints": 2,
+                  "content": "<i>اختبار بصري</i> - الخطوط الأفقية بالقرب من أعلى وأسفل كل شاشة من الشاشات الثلاث متوازنة",
+                  "bulletPoint": null,
+                  "scenarioIGSubTitle": null
+                },
+                {
+                  "idScenarioIGSubTitleBullets": 1716,
+                  "idScenarioIGSubTitle": 17406,
+                  "idBulletPoints": 2,
+                  "content": "<i>اختبار الصوت</i> - الصوت يتناوب بين السماعات اليمنى واليسرى",
+                  "bulletPoint": null,
+                  "scenarioIGSubTitle": null
+                },
+                {
+                  "idScenarioIGSubTitleBullets": 1717,
+                  "idScenarioIGSubTitle": 17406,
+                  "idBulletPoints": 2,
+                  "content": "<i>اختبار الحركة</i> – مقعد السائق يتحرك",
+                  "bulletPoint": null,
+                  "scenarioIGSubTitle": null
+                },
+                {
+                  "idScenarioIGSubTitleBullets": 1718,
+                  "idScenarioIGSubTitle": 17406,
+                  "idBulletPoints": 2,
+                  "content": "<i>قوة التوجيه</i> - تشعر بمقاومة عند التوجيهr",
+                  "bulletPoint": null,
+                  "scenarioIGSubTitle": null
+                }
+              ]
+            },
+            {
+              "idScenarioIGSubTitle": 17407,
+              "idScenarioIGTitle": 16142,
+              "idBulletPoints": 1,
+              "content": "اختبار لكل فئة فرعية من عناصر التحكم:",
+              "bulletPoint": null,
+              "scenarioIGTitle": null,
+              "scenarioIGSubTitleBullets": [
+                {
+                  "idScenarioIGSubTitleBullets": 1719,
+                  "idScenarioIGSubTitle": 17407,
+                  "idBulletPoints": 2,
+                  "content": "<i>التوجيه</i>- قم بتدوير العجلة بالكامل إلى اليسار وإلى اليمين",
+                  "bulletPoint": null,
+                  "scenarioIGSubTitle": null
+                },
+                {
+                  "idScenarioIGSubTitleBullets": 1720,
+                  "idScenarioIGSubTitle": 17407,
+                  "idBulletPoints": 2,
+                  "content": "دواسة الفرامل ودواسة الوقود  - اضغط على كل دواسة حتى تصل إلى الأرضية.",
+                  "bulletPoint": null,
+                  "scenarioIGSubTitle": null
+                },
+                {
+                  "idScenarioIGSubTitleBullets": 1721,
+                  "idScenarioIGSubTitle": 17407,
+                  "idBulletPoints": 2,
+                  "content": "<i>المصابيح الوامضة</i> - قم بتشغيل كل مصباح وامض مشار إليه.",
+                  "bulletPoint": null,
+                  "scenarioIGSubTitle": null
+                },
+                {
+                  "idScenarioIGSubTitleBullets": 1722,
+                  "idScenarioIGSubTitle": 17407,
+                  "idBulletPoints": 2,
+                  "content": "<i>الإشعال</i> - شغّل المحرك وأعد المفتاح إلى وضع ”نشط“ (تشغيل).",
+                  "bulletPoint": null,
+                  "scenarioIGSubTitle": null
+                },
+                {
+                  "idScenarioIGSubTitleBullets": 1723,
+                  "idScenarioIGSubTitle": 17407,
+                  "idBulletPoints": 2,
+                  "content": "<i>فرامل اليد، الضوء العالي </i>إلخ. - قم بتشغيل كل عنصر تحكم.",
+                  "bulletPoint": null,
+                  "scenarioIGSubTitle": null
+                }
+              ]
+            },
+            {
+              "idScenarioIGSubTitle": 17408,
+              "idScenarioIGTitle": 16142,
+              "idBulletPoints": 1,
+              "content": "بعد اجتياز كل اختبار تحكم، ستظهر علامة اختيار خضراء.",
+              "bulletPoint": null,
+              "scenarioIGTitle": null,
+              "scenarioIGSubTitleBullets": []
+            },
+            {
+              "idScenarioIGSubTitle": 17409,
+              "idScenarioIGTitle": 16142,
+              "idBulletPoints": 1,
+              "content": "استخدم إشارة الانعطاف للتنقل بين خيارات القائمة.",
+              "bulletPoint": null,
+              "scenarioIGTitle": null,
+              "scenarioIGSubTitleBullets": []
+            },
+            {
+              "idScenarioIGSubTitle": 17410,
+              "idScenarioIGTitle": 16142,
+              "idBulletPoints": 1,
+              "content": "يظهر علامة X حمراء بجانب كل اختبار من اختبارات التحكم في الفئات الفرعية.",
+              "bulletPoint": null,
+              "scenarioIGTitle": null,
+              "scenarioIGSubTitleBullets": []
+            },
+            {
+              "idScenarioIGSubTitle": 17411,
+              "idScenarioIGTitle": 16142,
+              "idBulletPoints": 1,
+              "content": "Use the horn or pull the high beam lever towards you. to choose a category or select  “pass” or “fail”. ",
+              "bulletPoint": null,
+              "scenarioIGTitle": null,
+              "scenarioIGSubTitleBullets": []
+            },
+            {
+              "idScenarioIGSubTitle": 17412,
+              "idScenarioIGTitle": 16142,
+              "idBulletPoints": 1,
+              "content": "استخدم البوق أو اسحب ذراع الضوء العالي نحوك. لاختيار فئة أو تحديد ”نجاح“ أو ”فشل“.",
+              "bulletPoint": null,
+              "scenarioIGTitle": null,
+              "scenarioIGSubTitleBullets": []
+            },
+            {
+              "idScenarioIGSubTitle": 17413,
+              "idScenarioIGTitle": 16142,
+              "idBulletPoints": 1,
+              "content": "توجد عدة فئات على الشاشة المركزية: الصوت؛ قوة التوجيه؛ أدوات التحكم؛ إلخ.",
+              "bulletPoint": null,
+              "scenarioIGTitle": null,
+              "scenarioIGSubTitleBullets": []
+            },
+            {
+              "idScenarioIGSubTitle": 17414,
+              "idScenarioIGTitle": 16142,
+              "idBulletPoints": 1,
+              "content": "لإجراء اختبار القيادة، توجه مباشرة إلى خط الأقماع البرتقالية وتوقف. يتم اجتياز الاختبار عندما تسمع صوت جرسين وتلاحظ أن المشاة على يسارك يتحركون نحو الشاحنة الصغيرة.",
+              "bulletPoint": null,
+              "scenarioIGTitle": null,
+              "scenarioIGSubTitleBullets": []
+            },
+            {
+              "idScenarioIGSubTitle": 17415,
+              "idScenarioIGTitle": 16142,
+              "idBulletPoints": 1,
+              "content": "في كل فئة (باستثناء الضوابط)، يجب عليك تحديد ”ناجح“ أو ”راسب“.",
+              "bulletPoint": null,
+              "scenarioIGTitle": null,
+              "scenarioIGSubTitleBullets": []
+            },
+            {
+              "idScenarioIGSubTitle": 17416,
+              "idScenarioIGTitle": 16142,
+              "idBulletPoints": 1,
+              "content": "اضغط على بوق السيارة لعرض القائمة على الشاشة الأمامية.",
+              "bulletPoint": null,
+              "scenarioIGTitle": null,
+              "scenarioIGSubTitleBullets": []
+            },
+            {
+              "idScenarioIGSubTitle": 17417,
+              "idScenarioIGTitle": 16142,
+              "idBulletPoints": 1,
+              "content": "عند تحديد فئة أدوات التحكم ، ستظهر قائمة جديدة تحتوي على عدة فئات فرعية على الشاشة اليمنى:  على سبيل المثال التوجيه ؛  الفرامل ؛  دواسة الوقود وما إلى ذلك.",
+              "bulletPoint": null,
+              "scenarioIGTitle": null,
+              "scenarioIGSubTitleBullets": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "scenarioSlides": [
+    {
+      "idScenarioSlide": 3169,
+      "idScenarioInfo": 3170,
+      "scenarioInfo": null,
+      "scenarioSlideTitles": [
+        {
+          "idScenarioSlideTitle": 5455,
+          "idScenarioSlide": 3169,
+          "content": "<b>الهدف:</b> ",
+          "scenarioSlide": null,
+          "scenarioSlideSubTitles": [
+            {
+              "idScenarioSlideSubTitle": 10503,
+              "idScenarioSlideTitle": 5455,
+              "idBulletPoints": 1,
+              "content": "التحقق من المحاكي بعد بدء تشغيل الكمبيوتر",
+              "bulletPoint": null,
+              "scenarioSlideTitle": null,
+              "scenarioSlideSubTitleBullets": []
+            }
+          ]
+        },
+        {
+          "idScenarioSlideTitle": 5456,
+          "idScenarioSlide": 3169,
+          "content": "<b>Instructions: </b> ",
+          "scenarioSlide": null,
+          "scenarioSlideSubTitles": [
+            {
+              "idScenarioSlideSubTitle": 10504,
+              "idScenarioSlideTitle": 5456,
+              "idBulletPoints": 1,
+              "content": "حدد خيار القائمة عن طريق تشغيل البوق",
+              "bulletPoint": null,
+              "scenarioSlideTitle": null,
+              "scenarioSlideSubTitleBullets": []
+            },
+            {
+              "idScenarioSlideSubTitle": 10505,
+              "idScenarioSlideTitle": 5456,
+              "idBulletPoints": 1,
+              "content": "قم بالتمرير بين خيارات القائمة باستخدام مفتاح مؤشر الوميض.",
+              "bulletPoint": null,
+              "scenarioSlideTitle": null,
+              "scenarioSlideSubTitleBullets": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

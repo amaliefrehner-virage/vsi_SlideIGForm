@@ -1,0 +1,2653 @@
+﻿@using SlideIGWebRetry.Models
+@using System;
+@using System.Collections.Generic;
+@using System.Linq;
+@using System.Web;
+@using System.Web.Mvc;
+@using System.Web.UI
+@model ScenarioModel
+@{
+    ViewBag.Title = "Edit";
+    var scenario = Json.Encode(Model);
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <script src="~/Scripts/jquery-3.6.4.js"></script>
+    <script src="~/Scripts/popper.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="~/Scripts/popper.js"></script>
+    <link href="~/Scripts/select2.min.css" rel="stylesheet" />
+    <script src="~/Scripts/select2.min.js"></script>
+</head>
+<body>
+    @if (@Model != null)
+    {
+        <div id="" class="">
+            <div class="container">
+                @if (@Model.ScenarioInfoId != null)
+                {
+                    <div class="row justify-content-between">
+                        <a id="previousSc-Button" class="btn btn-light">
+                            <img src="~/Content/Images/previous-arrow.png" style="width:20px" alt="Edit">
+                        </a>
+                        <a id="nextSc-Button" class="btn btn-light">
+                            <img src="~/Content/Images/next-arrow.png" style="width:20px" alt="Edit">
+                        </a>
+                    </div>
+                    <div class="row">
+                        <div>
+                            <div class="dropdown px-4 pb-4 input-group-append">
+                                <h6 class="dropdown-header">Scenarios</h6>
+                                <select id="scenario-select" class="form-select form-control" onchange="location = this.value;">
+                                    @for (int i = 0; i < ViewBag.listScenarios.Count; i++)
+                                    {
+                                        <option value="@Url.RouteUrl(new { controller = "edit", action = "Index", id = ViewBag.listScenarios[i].Id, type = ViewBag.listScenarios[i].Type, lang = ViewBag.listScenarios[i].Language })"
+                                                @if (ViewBag.listScenarios[i].Id == Model.Id && ViewBag.listScenarios[i].Type == Model.Type && ViewBag.listScenarios[i].Language == Model.Language) { <text> selected</text> }>
+                                            @ViewBag.listScenarios[i].Scenario_number - @ViewBag.listScenarios[i].Level_name (@ViewBag.listScenarios[i].Language, @ViewBag.listScenarios[i].Type))
+                                        </option>
+                                    }
+                                </select>
+                                <div class="input-group-append">
+                                    <ul class="checkbox-menu" aria-labelledby="">
+                                        <li>
+                                            Key Word
+                                            <input id="searchKeyWord" type="text" />
+                                        </li>
+                                        Language
+                                        @foreach (var lang in ViewBag.listLang)
+                                        {
+                                            <li id="language">
+                                                <label>
+                                                    <input type="checkbox" value="@lang.Value">@lang.Value
+                                                </label>
+                                            </li>
+                                        }
+                                        Type
+                                        @foreach (var type in ViewBag.listType)
+                                        {
+                                            <li id="type">
+                                                <label>
+                                                    <input type="checkbox" value="@type.Value">@type.Value
+                                                </label>
+                                            </li>
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-group-append">
+                            <div class="">
+                                <div class="dropdown pl-4 pr-1 pb-4 input-group-append">
+                                    <h6 class="dropdown-header">Language</h6>
+                                    <select class="form-select form-control" onchange="location = this.value;">
+                                        @foreach (var lang in ViewBag.listLang)
+                                        {
+                                            <option value="@Url.RouteUrl(new { controller = "edit", action = "Index", id = Model.Id, type = Model.Type, lang = lang.Value })"
+                                                    @if (lang.Value == Model.Language) { <text> selected</text> }>
+                                                @lang.Value
+                                            </option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="dropdown pb-4 px-1 input-group-append">
+                                <h6 class="dropdown-header">Type</h6>
+                                <select class="form-select form-control" onchange="location = this.value;">
+                                    @foreach (var type in ViewBag.listType)
+                                    {
+                                        <option value="@Url.RouteUrl(new { controller = "edit", action = "Index", id = Model.Id, type = type.Value, lang = Model.Language })"
+                                                @if (type.Value == Model.Type) { <text> selected</text> }>
+                                            @type.Value
+                                        </option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-8 input-group-append">
+                            <div class="col-1 mr-3">
+                                <div id="newScButton" class="btn btn-outline-light" title="New scenario">
+                                    <img src="~/Content/Images/new.png" style="width:25px" alt="New">
+                                </div>
+                                <div class="modal fade" id="NewScenarioModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">New scenario</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="input-group-append justify-content-center align-content-center" id="newScList">
+                                                    <button id="CopyAsNewButton" class="btn btn-outline-info w-25 mr-2"
+                                                            data-ScenarioInfoId="@Model.Id"
+                                                            data-lang="@Model.Language"
+                                                            data-type="@Model.Type">
+                                                        Copy
+                                                    </button>
+                                                    <button id="BlankAsNewButton" class="btn btn-outline-info w-25 ml-2">Blank</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-1 mr-3">
+                                <div id="AddLanguageButton" class="btn btn-outline-light" title="Add a language">
+                                    <img src="~/Content/Images/addlanguage.png" style="width:25px" alt="Add Language">
+                                </div>
+                                <div class="modal fade" id="AddLanguageModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">Add a language</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div id="AddLanguageInputs" class="row-md-6">
+                                                    <input id="AddLanguageText" class="input-group-text border-dark w-100" />
+                                                    <div id="alert-add-language" style="display:none;" class="alert-danger">This field is required</div>
+                                                    <div id="alert-add-language-exists" style="display:none;" class="alert-danger">This language already exists</div>
+                                                    <div class="input-group-append justify-content-center align-content-center">
+                                                        <button id="AddLanguageAdd" class="btn btn-outline-info w-50 mt-2">Add</button>
+                                                        @*<button type="button" class="btn btn-outline-danger w-50 mt-2" data-dismiss="modal" onclick="location.reload()">Cancel</button>*@
+                                                    </div>
+                                                </div>
+                                                <div id="alert-add-language-loading" style="display:none;" class="text-center display-4">
+                                                    Adding Language...
+                                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="margin: auto; display: block; shape-rendering: auto;" width="200px" height="200px" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
+                                                        <g transform="rotate(0 50 50)">
+                                                            <rect x="47" y="24" rx="3" ry="6" width="4" height="8" fill="#71d8fe">
+                                                                <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.9166666666666666s" repeatCount="indefinite" />
+                                                            </rect>
+                                                        </g>
+                                                        <g transform="rotate(30 50 50)">
+                                                            <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#71d8fe">
+                                                                <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.8333333333333334s" repeatCount="indefinite" />
+                                                            </rect>
+                                                        </g>
+                                                        <g transform="rotate(60 50 50)">
+                                                            <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#71d8fe">
+                                                                <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.75s" repeatCount="indefinite" />
+                                                            </rect>
+                                                        </g>
+                                                        <g transform="rotate(90 50 50)">
+                                                            <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#71d8fe">
+                                                                <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.6666666666666666s" repeatCount="indefinite" />
+                                                            </rect>
+                                                        </g>
+                                                        <g transform="rotate(120 50 50)">
+                                                            <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#71d8fe">
+                                                                <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.5833333333333334s" repeatCount="indefinite" />
+                                                            </rect>
+                                                        </g>
+                                                        <g transform="rotate(150 50 50)">
+                                                            <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#71d8fe">
+                                                                <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.5s" repeatCount="indefinite" />
+                                                            </rect>
+                                                        </g>
+                                                        <g transform="rotate(180 50 50)">
+                                                            <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#71d8fe">
+                                                                <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.4166666666666667s" repeatCount="indefinite" />
+                                                            </rect>
+                                                        </g>
+                                                        <g transform="rotate(210 50 50)">
+                                                            <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#71d8fe">
+                                                                <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.3333333333333333s" repeatCount="indefinite" />
+                                                            </rect>
+                                                        </g>
+                                                        <g transform="rotate(240 50 50)">
+                                                            <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#71d8fe">
+                                                                <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.25s" repeatCount="indefinite" />
+                                                            </rect>
+                                                        </g>
+                                                        <g transform="rotate(270 50 50)">
+                                                            <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#71d8fe">
+                                                                <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.16666666666666666s" repeatCount="indefinite" />
+                                                            </rect>
+                                                        </g>
+                                                        <g transform="rotate(300 50 50)">
+                                                            <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#71d8fe">
+                                                                <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.08333333333333333s" repeatCount="indefinite" />
+                                                            </rect>
+                                                        </g>
+                                                        <g transform="rotate(330 50 50)">
+                                                            <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#71d8fe">
+                                                                <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="0s" repeatCount="indefinite" />
+                                                            </rect>
+                                                        </g>
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-1 mr-3">
+                                <div class="modal fade" id="DelLanguageModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">Delete a language</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div id="DelLanguageInputs" class="row-md-6">
+                                                    <div id="alert-del-language" style="display:none;" class="alert-danger">Please choose a language</div>
+                                                    <select id="DelLanguageSelect" class="form-select form-control">
+                                                        <option selected value=0>Choose a language to delete permanently</option>
+                                                        @foreach (var lang in ViewBag.listLang)
+                                                        {
+                                                            <option class="" value="@lang.Key">
+                                                                @lang.Value
+                                                            </option>
+                                                        }
+                                                    </select>
+                                                    <div class="input-group-append justify-content-center align-content-center">
+                                                        <button id="DelLanguageDel" class="btn btn-outline-danger w-50 mt-2">Delete</button>
+                                                    </div>
+                                                </div>
+                                                <div id="alert-del-language-loading" style="display:none;" class="text-center display-4">
+                                                    Deleting Language...
+                                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="margin: auto; display: block; shape-rendering: auto;" width="200px" height="200px" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
+                                                        <g transform="rotate(0 50 50)">
+                                                            <rect x="47" y="24" rx="3" ry="6" width="4" height="8" fill="#ff0000">
+                                                                <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.9166666666666666s" repeatCount="indefinite" />
+                                                            </rect>
+                                                        </g>
+                                                        <g transform="rotate(30 50 50)">
+                                                            <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#ff0000">
+                                                                <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.8333333333333334s" repeatCount="indefinite" />
+                                                            </rect>
+                                                        </g>
+                                                        <g transform="rotate(60 50 50)">
+                                                            <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#ff0000">
+                                                                <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.75s" repeatCount="indefinite" />
+                                                            </rect>
+                                                        </g>
+                                                        <g transform="rotate(90 50 50)">
+                                                            <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#ff0000">
+                                                                <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.6666666666666666s" repeatCount="indefinite" />
+                                                            </rect>
+                                                        </g>
+                                                        <g transform="rotate(120 50 50)">
+                                                            <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#ff0000">
+                                                                <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.5833333333333334s" repeatCount="indefinite" />
+                                                            </rect>
+                                                        </g>
+                                                        <g transform="rotate(150 50 50)">
+                                                            <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#ff0000">
+                                                                <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.5s" repeatCount="indefinite" />
+                                                            </rect>
+                                                        </g>
+                                                        <g transform="rotate(180 50 50)">
+                                                            <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#ff0000">
+                                                                <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.4166666666666667s" repeatCount="indefinite" />
+                                                            </rect>
+                                                        </g>
+                                                        <g transform="rotate(210 50 50)">
+                                                            <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#ff0000">
+                                                                <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.3333333333333333s" repeatCount="indefinite" />
+                                                            </rect>
+                                                        </g>
+                                                        <g transform="rotate(240 50 50)">
+                                                            <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#ff0000">
+                                                                <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.25s" repeatCount="indefinite" />
+                                                            </rect>
+                                                        </g>
+                                                        <g transform="rotate(270 50 50)">
+                                                            <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#ff0000">
+                                                                <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.16666666666666666s" repeatCount="indefinite" />
+                                                            </rect>
+                                                        </g>
+                                                        <g transform="rotate(300 50 50)">
+                                                            <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#ff0000">
+                                                                <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.08333333333333333s" repeatCount="indefinite" />
+                                                            </rect>
+                                                        </g>
+                                                        <g transform="rotate(330 50 50)">
+                                                            <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#ff0000">
+                                                                <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="0s" repeatCount="indefinite" />
+                                                            </rect>
+                                                        </g>
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4 input-group-append justify-content-end align-content-end">
+                            <div class="col-2 mr-4">
+                                <div class="btn btn-outline-light" id="modalbutton" data-toggle="modal" data-target="#exampleModal" title="Preview">
+                                    <img src="~/Content/Images/preview.png" style="width:25px" alt="Preview">
+                                </div>
+                            </div>
+                            <div class="col-2 mr-3" title="Go to details page">
+                                <a href="@Url.RouteUrl(new { controller = "details", action = "Index", id = Model.Id, type = Model.Type, lang = Model.Language })" class="btn btn-outline-light mb-3">
+                                    <img src="~/Content/Images/file.png" style="width:25px" alt="Details">
+                                </a>
+                            </div>
+                            <div class="col-2 mr-4">
+                                <div id="DeleteButton" class="btn btn-outline-light" title="Delete this scenario">
+                                    <img src="~/Content/Images/delete.png" style="width:25px" alt="Delete">
+                                </div>
+                                <div class="modal fade" id="DeleteScModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">Are you sure you want to delete this scenario?</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="list-group" id="DeleteQuestion">
+                                                    <button id="DeleteButtonContinue" class="btn btn-outline-danger"
+                                                            data-ScenarioInfoId="@Model.ScenarioInfoId">
+                                                        Delete
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    //
+
+                    <div class="flex-column flex-md-row justify-content-center align-content-center">
+                        @if (Model.SlideList != null)
+                        {
+                            <div class="row-md-6">
+                                <div class="table-responsive w-100">
+                                    <table border="1" cellpadding="0" cellspacing="0" class="w-100">
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    <div class="p-2">
+                                                        <div class="input-group-append">
+                                                            @if (Model.Language == "es")
+                                                            {
+                                                                <p class="lessonHeader">Lección: @Model.Scenario_number</p>
+
+                                                            }
+                                                            else if (Model.Language == "fr")
+                                                            {
+                                                                <p class="lessonHeader">Leçon: @Model.Scenario_number</p>
+                                                            }
+                                                            else
+                                                            {
+                                                                <p class="lessonHeader">Lesson: @Model.Scenario_number</p>
+                                                            }
+                                                            <p class="mx-1">-</p>
+                                                            <p id="text-InfoTitle-@Model.ScenarioInfoId">@Model.Level_name</p>
+                                                            <button class="bouton ml-2 mb-3" id="Btn-InfoTitle-@Model.ScenarioInfoId" data-ScenarioInfoId=@Model.ScenarioInfoId data-type="InfoTitle"
+                                                                    data-ide="InfoTitle-@Model.ScenarioInfoId" title="Edit Level Name">
+                                                                <img class="imgLittle" style="width: 20px;" src="~/Content/Images/edit.png" alt="Edit">
+                                                            </button>
+                                                        </div>
+                                                        <div id="editSection-InfoTitle-@Model.ScenarioInfoId" style="display: none;">
+                                                            <div class="input-group w-100">
+                                                                <input type="text" id="editInput-InfoTitle-@Model.ScenarioInfoId" class="form-control input-lg" />
+                                                                <div class="input-group-append">
+
+                                                                    <button class="bouton-save btn btn-outline-success p-1" id="saveBtn-InfoTitle-@Model.ScenarioInfoId"
+                                                                            data-ScenarioInfoId=@Model.ScenarioInfoId
+                                                                            data-scenarioid=@Model.Id
+                                                                            data-languageid=@Model.IDLanguage
+                                                                            data-typeid=@Model.IDSimulatorType
+                                                                            data-type="InfoTitle"
+                                                                            data-ide="InfoTitle-@Model.ScenarioInfoId">
+                                                                        Save
+                                                                    </button>
+
+                                                                    <button class="bouton-cancel btn btn-outline-danger p-1" id="cancelBtn-InfoTitle-@Model.ScenarioInfoId"
+                                                                            data-ScenarioInfoId=@Model.ScenarioInfoId data-type="InfoTitle"
+                                                                            data-ide="InfoTitle-@Model.ScenarioInfoId">
+                                                                        Cancel
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    @*▼▼▼▼▼▼▼▼▼▼===AJOUTER SLIDE TITLE===▼▼▼▼▼▼▼▼▼▼*@
+                                                    <div>
+                                                        <button class="bouton-plus mr-2" id="Btn-PlusSlideTitle-@Model.ScenarioSlideId" data-ScenarioSlideId=@Model.ScenarioSlideId data-type="PlusSlideTitle"
+                                                                data-ide="PlusSlideTitle-@Model.ScenarioSlideId" title="Add Slide Title">
+                                                            <img class="imgLittle" style="width: 20px;" src="~/Content/Images/plusinfo.png" />
+                                                        </button>
+                                                        <div id="editSection-PlusSlideTitle-@Model.ScenarioSlideId" style="display: none;">
+                                                            <div class="input-group w-100">
+                                                                <input type="text" id="editInput-PlusSlideTitle-@Model.ScenarioSlideId" class="form-control input-lg" />
+                                                                <div class="input-group-append">
+
+                                                                    <button class="bouton-plus-save btn btn-outline-success p-1" id="saveBtn-PlusSlideTitle-@Model.ScenarioSlideId"
+                                                                            data-ScenarioSlideId=@Model.ScenarioSlideId data-type="PlusSlideTitle"
+                                                                            data-ide="PlusSlideTitle-@Model.ScenarioSlideId">
+                                                                        Save
+                                                                    </button>
+
+                                                                    <button class="bouton-plus-cancel btn btn-outline-danger p-1" id="cancelBtn-PlusSlideTitle-@Model.ScenarioSlideId"
+                                                                            data-ScenarioSlideId=@Model.ScenarioSlideId data-type="PlusSlideTitle"
+                                                                            data-ide="PlusSlideTitle-@Model.ScenarioSlideId">
+                                                                        Cancel
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    @*▲▲▲▲▲▲▲▲▲▲===AJOUTER SLIDE TITLE===▲▲▲▲▲▲▲▲▲▲*@
+                                                    <div class="p-2">
+                                                        @foreach (var o in Model.SlideList)
+                                                        {
+                                                            <div class="input-group-append">
+                                                                <p id="text-SlideTitle-@o.IdTitle-@Model.ScenarioSlideId">@Html.Raw(o.Name)</p>
+                                                                <button class="bouton ml-2 mb-3" id="Btn-SlideTitle-@o.IdTitle-@Model.ScenarioSlideId" data-IdTitle=@o.IdTitle data-ScenarioSlideId=@Model.ScenarioSlideId data-type="SlideTitle"
+                                                                        data-ide="SlideTitle-@o.IdTitle-@Model.ScenarioSlideId" title="Edit Slide Title">
+                                                                    <img class="imgLittle" style="width: 20px;" src="~/Content/Images/editinfo.png" alt="Edit">
+                                                                </button>
+
+
+                                                                @*▼▼▼▼▼▼▼▼▼▼===DELETE SLIDE TITLE===▼▼▼▼▼▼▼▼▼▼*@
+                                                                <button class="bouton-delete ml-2 mb-3" id="Btn-DeleteSlideTitle-@o.IdTitle"
+                                                                        data-IdTitle=@o.IdTitle
+                                                                        data-type="DeleteSlideTitle"
+                                                                        data-ide="DeleteSlideTitle-@o.IdTitle" title="Delete Slide Title">
+                                                                    <img class="imgLittle" style="width: 20px;" src="~/Content/Images/deleteinfo.png" alt="Delete">
+                                                                </button>
+                                                                <div id="editSection-DeleteSlideTitle-@o.IdTitle" style="display: none;">
+                                                                    <div class="input-group alert-danger w-100 mx-4">
+                                                                        @*<h6 class="alert-danger">Êtes-vous sûr d'effacer ?</h6>*@
+                                                                        <h5 class="alert-danger">Are you sure you want to delete ?</h5>
+                                                                        <div class="input-group-append mx-2">
+
+                                                                            <button class="bouton-delete-save btn btn-outline-success p-1 mx-1" id="saveBtn-DeleteSlideTitle-@o.IdTitle"
+                                                                                    data-IdTitle=@o.IdTitle
+                                                                                    data-type="DeleteSlideTitle"
+                                                                                    data-ide="DeleteSlideTitle-@o.IdTitle">
+                                                                                Yes
+                                                                            </button>
+
+                                                                            <button class="bouton-delete-cancel btn btn-outline-danger p-1 mx-1" id="cancelBtn-DeleteSlideTitle-@o.IdTitle"
+                                                                                    data-IdTitle=@o.IdTitle
+                                                                                    data-type="DeleteSlideTitle"
+                                                                                    data-ide="DeleteSlideTitle-@o.IdTitle">
+                                                                                Cancel
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                @*▲▲▲▲▲▲▲▲▲▲===DELETE SLIDE TITLE===▲▲▲▲▲▲▲▲▲▲*@
+
+                                                            </div>
+
+                                                            <div id="editSection-SlideTitle-@o.IdTitle-@Model.ScenarioSlideId" style="display: none;">
+                                                                <div class="input-group w-100">
+                                                                    <input type="text" id="editInput-SlideTitle-@o.IdTitle-@Model.ScenarioSlideId" class="form-control input-lg" />
+                                                                    <div class="input-group-append">
+
+                                                                        <button class="bouton-save btn btn-outline-success p-1" id="saveBtn-SlideTitle-@o.IdTitle-@Model.ScenarioSlideId"
+                                                                                data-IdTitle=@o.IdTitle data-ScenarioSlideId=@Model.ScenarioSlideId data-type="SlideTitle"
+                                                                                data-ide="SlideTitle-@o.IdTitle-@Model.ScenarioSlideId">
+                                                                            Save
+                                                                        </button>
+
+                                                                        <button class="bouton-cancel btn btn-outline-danger p-1" id="cancelBtn-SlideTitle-@o.IdTitle-@Model.ScenarioSlideId"
+                                                                                data-IdTitle=@o.IdTitle data-ScenarioSlideId=@Model.ScenarioSlideId data-type="SlideTitle"
+                                                                                data-ide="SlideTitle-@o.IdTitle-@Model.ScenarioSlideId">
+                                                                            Cancel
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            @*▼▼▼▼▼▼▼▼▼▼=== AJOUTER SLIDE SUBTITLE ===▼▼▼▼▼▼▼▼▼▼*@
+                                                            <div class="ml-3">
+                                                                <button class="bouton-plus mr-2" id="Btn-PlusSlideSubTitle-@o.IdTitle" data-IdTitle=@o.IdTitle data-type="PlusSlideSubTitle"
+                                                                        data-ide="PlusSlideSubTitle-@o.IdTitle" title="Add Slide SubTitle">
+                                                                    <img class="imgLittle" style="width: 20px;" src="~/Content/Images/plusinfo.png" alt="Plus" />
+                                                                </button>
+                                                                <div id="editSection-PlusSlideSubTitle-@o.IdTitle" style="display: none;">
+                                                                    <div class="input-group w-100">
+                                                                        <input type="text" id="editInput-PlusSlideSubTitle-@o.IdTitle" class="form-control input-lg" />
+                                                                        <div class="input-group-append">
+
+                                                                            <button class="bouton-plus-save btn btn-outline-success p-1" id="saveBtn-PlusSlideSubTitle-@o.IdTitle"
+                                                                                    data-IdTitle=@o.IdTitle data-type="PlusSlideSubTitle" data-IdBullet="1"
+                                                                                    data-ide="PlusSlideSubTitle-@o.IdTitle">
+                                                                                Save
+                                                                            </button>
+
+                                                                            <button class="bouton-plus-cancel btn btn-outline-danger p-1" id="cancelBtn-PlusSlideSubTitle-@o.IdTitle"
+                                                                                    data-IdTitle=@o.IdTitle data-type="PlusSlideSubTitle"
+                                                                                    data-ide="PlusSlideSubTitle-@o.IdTitle">
+                                                                                Cancel
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            @*▲▲▲▲▲▲▲▲▲▲===AJOUTER SLIDE SUBTITLE===▲▲▲▲▲▲▲▲▲▲*@
+
+
+                                                            if (o.Subtitles.Count != 0)
+                                                            {
+                                                                foreach (var k in o.Subtitles)
+                                                                {
+                                                                    <ul>
+                                                                        <li class="bullet-custom">
+                                                                            @*========CHANGE BULLETS===========*@
+                                                                            <select id="SelectBulletSlideSubTitle-@k.IdSubtitle" data-type="SelectBulletSlideSubTitle"
+                                                                                    data-IdTitle=@o.IdTitle data-IdSubTitle=@k.IdSubtitle
+                                                                                    data-ide="SlideSubTitle-@o.IdTitle-@k.IdSubtitle"
+                                                                                    class="selectBullet form-select">
+                                                                                @foreach (var i in ViewBag.listBullets)
+                                                                                {
+                                                                                    <option value="@i.Key"
+                                                                                            @if (i.Key == k.BulletTypeID) { <text> selected</text> }>
+                                                                                        @Html.Raw(@i.Value)
+                                                                                    </option>
+                                                                                }
+                                                                            </select>
+                                                                            @*========CHANGE BULLETS===========*@
+                                                                            <div class="p-2">
+                                                                                <div class="input-group-append">
+                                                                                    <p id="text-SlideSubTitle-@o.IdTitle-@k.IdSubtitle">@Html.Raw(k.Name)</p>
+                                                                                    <button class="bouton ml-2 mb-3" id="Btn-SlideSubTitle-@o.IdTitle-@k.IdSubtitle" data-IdTitle=@o.IdTitle data-IdSubTitle=@k.IdSubtitle data-type="SlideSubTitle"
+                                                                                            data-ide="SlideSubTitle-@o.IdTitle-@k.IdSubtitle" title="Edit Slide SubTitle">
+                                                                                        <img class="imgLittle" style="width: 20px;" src="~/Content/Images/editinfo.png" alt="Edit" />
+                                                                                    </button>
+
+                                                                                    @*▼▼▼▼▼▼▼▼▼▼===DELETE SLIDE SUBTITLE===▼▼▼▼▼▼▼▼▼▼*@
+                                                                                    <button class="bouton-delete ml-2 mb-3" id="Btn-DeleteSlideSubTitle-@k.IdSubtitle"
+                                                                                            data-IdSubTitle=@k.IdSubtitle
+                                                                                            data-type="DeleteSlideSubTitle"
+                                                                                            data-ide="DeleteSlideSubTitle-@k.IdSubtitle" title="Delete Slide SubTitle">
+                                                                                        <img class="imgLittle" style="width: 20px;" src="~/Content/Images/deleteinfo.png" alt="Delete">
+                                                                                    </button>
+                                                                                    <div id="editSection-DeleteSlideSubTitle-@k.IdSubtitle" style="display: none;">
+                                                                                        <div class="input-group alert-danger w-100 mx-4">
+                                                                                            @*<h6 class="alert-danger">Êtes-vous sûr d'effacer ?</h6>*@
+                                                                                            <h5 class="alert-danger">Are you sure you want to delete ?</h5>
+                                                                                            <div class="input-group-append mx-2">
+
+                                                                                                <button class="bouton-delete-save btn btn-outline-success p-1 mx-1" id="saveBtn-DeleteSlideSubTitle-@k.IdSubtitle"
+                                                                                                        data-IdSubTitle=@k.IdSubtitle
+                                                                                                        data-type="DeleteSlideSubTitle"
+                                                                                                        data-ide="DeleteSlideSubTitle-@k.IdSubtitle">
+                                                                                                    Yes
+                                                                                                </button>
+
+                                                                                                <button class="bouton-delete-cancel btn btn-outline-danger p-1 mx-1" id="cancelBtn-DeleteSlideSubTitle-@k.IdSubtitle"
+                                                                                                        data-IdSubTitle=@k.IdSubtitle
+                                                                                                        data-type="DeleteSlideSubTitle"
+                                                                                                        data-ide="DeleteSlideSubTitle-@k.IdSubtitle">
+                                                                                                    Cancel
+                                                                                                </button>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    @*▲▲▲▲▲▲▲▲▲▲===DELETE SLIDE SUBTITLE===▲▲▲▲▲▲▲▲▲▲*@
+                                                                                </div>
+                                                                                <div id="editSection-SlideSubTitle-@o.IdTitle-@k.IdSubtitle" style="display: none;">
+                                                                                    <div class="input-group w-100">
+                                                                                        <input type="text" id="editInput-SlideSubTitle-@o.IdTitle-@k.IdSubtitle" class="form-control input-lg" />
+                                                                                        <div class="input-group-append">
+
+                                                                                            <button class="bouton-save btn btn-outline-success p-1" id="saveBtn-SlideSubTitle-@o.IdTitle-@k.IdSubtitle"
+                                                                                                    data-IdTitle=@o.IdTitle data-IdSubTitle=@k.IdSubtitle data-type="SlideSubTitle"
+                                                                                                    data-ide="SlideSubTitle-@o.IdTitle-@k.IdSubtitle" data-bulletpointid="@k.BulletTypeID">
+                                                                                                Save
+                                                                                            </button>
+
+                                                                                            <button class="bouton-cancel btn btn-outline-danger p-1" id="cancelBtn-SlideSubTitle-@o.IdTitle-@k.IdSubtitle"
+                                                                                                    data-IdTitle=@o.IdTitle data-IdSubTitle=@k.IdSubtitle data-type="SlideSubTitle"
+                                                                                                    data-ide="SlideSubTitle-@o.IdTitle-@k.IdSubtitle">
+                                                                                                Cancel
+                                                                                            </button>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            @if (k.Bullets.Count != 0)
+                                                                            {
+                                                                                <ul>
+                                                                                    @foreach (var v in k.Bullets)
+                                                                                    {
+                                                                                        <li class="bullet-custom">
+                                                                                            @*========CHANGE BULLETS===========*@
+                                                                                            <select id="SelectBulletSlideBullet-@k.IdSubtitle" data-type="SelectBulletSlideBullet"
+                                                                                                    data-IdBullet=@v.IdBullet data-IdSubTitle=@k.IdSubtitle
+                                                                                                    data-ide="SlideBullet-@v.IdBullet-@k.IdSubtitle"
+                                                                                                    class="selectBullet form-select">
+                                                                                                @foreach (var i in ViewBag.listBullets)
+                                                                                                {
+                                                                                                    <option value="@i.Key"
+                                                                                                            @if (i.Key == v.BulletTypeID) { <text> selected</text> }>
+                                                                                                        @Html.Raw(@i.Value)
+                                                                                                    </option>
+                                                                                                }
+                                                                                            </select>
+                                                                                            @*========CHANGE BULLETS===========*@
+                                                                                            <div class="input-group-append">
+                                                                                                <p id="text-SlideBullet-@v.IdBullet-@k.IdSubtitle">@Html.Raw(v.Name)</p>
+                                                                                                <button class="bouton ml-2 mb-3" id="Btn-SlideBullet-@v.IdBullet-@k.IdSubtitle" data-IdBullet=@v.IdBullet data-IdSubTitle=@k.IdSubtitle data-type="SlideBullet"
+                                                                                                        data-ide="SlideBullet-@v.IdBullet-@k.IdSubtitle" title="Edit Slide Bullet">
+                                                                                                    <img class="imgLittle" style="width: 20px;" src="~/Content/Images/editinfo.png" alt="Edit">
+                                                                                                </button>
+
+                                                                                                @*▼▼▼▼▼▼▼▼▼▼===DELETE SLIDE BULLET===▼▼▼▼▼▼▼▼▼▼*@
+                                                                                                <button class="bouton-delete ml-2 mb-3" id="Btn-DeleteSlideBullet-@v.IdBullet"
+                                                                                                        data-IdBullet=@v.IdBullet
+                                                                                                        data-type="DeleteSlideBullet"
+                                                                                                        data-ide="DeleteSlideBullet-@v.IdBullet" title="Delete Slide Bullet">
+                                                                                                    <img class="imgLittle" style="width: 20px;" src="~/Content/Images/deleteinfo.png" alt="Delete">
+                                                                                                </button>
+                                                                                                <div id="editSection-DeleteSlideBullet-@v.IdBullet" style="display: none;">
+                                                                                                    <div class="input-group alert-danger w-100 mx-4">
+                                                                                                        <h5 class="alert-danger">Are you sure you want to delete ?</h5>
+                                                                                                        <div class="input-group-append mx-2">
+
+                                                                                                            <button class="bouton-delete-save btn btn-outline-success p-1 mx-1" id="saveBtn-DeleteSlideBullet-@v.IdBullet"
+                                                                                                                    data-IdBullet=@v.IdBullet
+                                                                                                                    data-type="DeleteSlideBullet"
+                                                                                                                    data-ide="DeleteSlideBullet-@v.IdBullet">
+                                                                                                                Yes
+                                                                                                            </button>
+
+                                                                                                            <button class="bouton-delete-cancel btn btn-outline-danger p-1 mx-1" id="cancelBtn-DeleteSlideBullet-@v.IdBullet"
+                                                                                                                    data-IdBullet=@v.IdBullet
+                                                                                                                    data-type="DeleteSlideBullet"
+                                                                                                                    data-ide="DeleteSlideBullet-@v.IdBullet">
+                                                                                                                Cancel
+                                                                                                            </button>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                @*▲▲▲▲▲▲▲▲▲▲===DELETE SLIDE BULLET===▲▲▲▲▲▲▲▲▲▲*@
+                                                                                            </div>
+                                                                                            <div id="editSection-SlideBullet-@v.IdBullet-@k.IdSubtitle" style="display: none;">
+                                                                                                <div class="input-group w-100">
+                                                                                                    <input type="text" id="editInput-SlideBullet-@v.IdBullet-@k.IdSubtitle" class="form-control input-lg" />
+                                                                                                    <div class="input-group-append">
+
+                                                                                                        <button class="bouton-save btn btn-outline-success p-1" id="saveBtn-SlideBullet-@v.IdBullet-@k.IdSubtitle"
+                                                                                                                data-IdBullet=@v.IdBullet data-IdSubTitle=@k.IdSubtitle data-type="SlideBullet"
+                                                                                                                data-ide="SlideBullet-@v.IdBullet-@k.IdSubtitle" data-bulletpointid="@v.BulletTypeID">
+                                                                                                            Save
+                                                                                                        </button>
+
+                                                                                                        <button class="bouton-cancel btn btn-outline-danger p-1" id="cancelBtn-SlideBullet-@v.IdBullet-@k.IdSubtitle"
+                                                                                                                data-IdBullet=@v.IdBullet data-IdSubTitle=@k.IdSubtitle data-type="SlideBullet"
+                                                                                                                data-ide="SlideBullet-@v.IdBullet-@k.IdSubtitle">
+                                                                                                            Cancel
+                                                                                                        </button>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </li>
+                                                                                    }
+                                                                                </ul>
+                                                                            }
+                                                                            @*▼▼▼▼▼▼▼▼▼▼=== AJOUTER SLIDE BULLETS ===▼▼▼▼▼▼▼▼▼▼*@
+                                                                            <div class="ml-3">
+                                                                                <button class="bouton-plus mr-2" id="Btn-PlusSlideBullet-@k.IdSubtitle" data-IdSubTitle=@k.IdSubtitle data-type="PlusSlideBullet"
+                                                                                        data-ide="PlusSlideBullet-@k.IdSubtitle" title="Add Slide Bullet">
+                                                                                    <img class="imgLittle" style="width: 20px;" src="~/Content/Images/plusinfo.png" />
+                                                                                </button>
+                                                                                <div id="editSection-PlusSlideBullet-@k.IdSubtitle" style="display: none;">
+                                                                                    <div class="input-group w-100">
+                                                                                        <input type="text" id="editInput-PlusSlideBullet-@k.IdSubtitle" class="form-control input-lg" />
+                                                                                        <div class="input-group-append">
+
+                                                                                            <button class="bouton-plus-save btn btn-outline-success p-1" id="saveBtn-PlusSlideBullet-@k.IdSubtitle"
+                                                                                                    data-IdSubTitle=@k.IdSubtitle data-type="PlusSlideBullet" data-IdBullet="1"
+                                                                                                    data-ide="PlusSlideBullet-@k.IdSubtitle">
+                                                                                                Save
+                                                                                            </button>
+
+                                                                                            <button class="bouton-plus-cancel btn btn-outline-danger p-1" id="cancelBtn-PlusSlideBullet-@k.IdSubtitle"
+                                                                                                    data-IdSubTitle=@k.IdSubtitle data-type="PlusSlideBullet"
+                                                                                                    data-ide="PlusSlideBullet-@k.IdSubtitle">
+                                                                                                Cancel
+                                                                                            </button>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            @*▲▲▲▲▲▲▲▲▲▲===AJOUTER SLIDE BULLETS===▲▲▲▲▲▲▲▲▲▲*@
+                                                                        </li>
+                                                                    </ul>
+                                                                }
+                                                            }
+                                                        }
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <table border="1" cellpadding="0" cellspacing="0" class="w-100">
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <div class="pt-1 px-3">
+                                                <div class="input-group-append">
+                                                    @if (Model.Language == "es")
+                                                    {
+                                                        <p class="lessonHeader">Lección: @Model.Scenario_number</p>
+
+                                                    }
+                                                    else if (Model.Language == "fr")
+                                                    {
+                                                        <p class="lessonHeader">Leçon: @Model.Scenario_number</p>
+                                                    }
+                                                    else
+                                                    {
+                                                        <p class="lessonHeader">Lesson: @Model.Scenario_number</p>
+                                                    }
+                                                    <p class="mx-1">-</p>
+                                                    <p id="text-InfoTitle-@Model.ScenarioInfoId">@Model.Level_name</p>
+                                                    <button class="bouton ml-2 mb-3" id="Btn-InfoTitle-@Model.ScenarioInfoId" data-ScenarioInfoId=@Model.ScenarioInfoId data-type="InfoTitle"
+                                                            data-ide="InfoTitle-@Model.ScenarioInfoId" title="Edit Level Name">
+                                                        <img class="imgLittle" style="width: 20px;" src="~/Content/Images/edit.png" alt="Edit">
+                                                    </button>
+                                                </div>
+                                                <div id="editSection-InfoTitle-@Model.ScenarioInfoId" style="display: none;">
+                                                    <div class="input-group w-100">
+                                                        <input type="text" id="editInput-InfoTitle-@Model.ScenarioInfoId" class="form-control input-lg" />
+                                                        <div class="input-group-append">
+
+                                                            <button class="bouton-save btn btn-outline-success p-1" id="saveBtn-InfoTitle-@Model.ScenarioInfoId"
+                                                                    data-ScenarioInfoId=@Model.ScenarioInfoId
+                                                                    data-scenarioid=@Model.Id
+                                                                    data-languageid=@Model.IDLanguage
+                                                                    data-typeid=@Model.IDSimulatorType
+                                                                    data-type="InfoTitle"
+                                                                    data-ide="InfoTitle-@Model.ScenarioInfoId">
+                                                                Save
+                                                            </button>
+
+                                                            <button class="bouton-cancel btn btn-outline-danger p-1" id="cancelBtn-InfoTitle-@Model.ScenarioInfoId"
+                                                                    data-ScenarioInfoId=@Model.ScenarioInfoId data-type="InfoTitle"
+                                                                    data-ide="InfoTitle-@Model.ScenarioInfoId">
+                                                                Cancel
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                @if (Model.ScenarioSlideId != null)
+                                                {
+                                                    <h6 class="alert-light">Empty Slide</h6>
+                                                    <div>
+                                                        <button class="bouton-plus mr-2" id="Btn-PlusSlideTitle-@Model.ScenarioSlideId" data-ScenarioSlideId=@Model.ScenarioSlideId data-type="PlusSlideTitle"
+                                                                data-ide="PlusSlideTitle-@Model.ScenarioSlideId">
+                                                            Add Title
+                                                            <img class="imgLittle" style="width: 20px;" src="~/Content/Images/plusinfo.png" />
+                                                        </button>
+                                                        <div id="editSection-PlusSlideTitle-@Model.ScenarioSlideId" style="display: none;">
+                                                            <div class="input-group w-100">
+                                                                <input type="text" id="editInput-PlusSlideTitle-@Model.ScenarioSlideId" class="form-control input-lg" />
+                                                                <div class="input-group-append">
+
+                                                                    <button class="bouton-plus-save btn btn-outline-success p-1" id="saveBtn-PlusSlideTitle-@Model.ScenarioSlideId"
+                                                                            data-ScenarioSlideId=@Model.ScenarioSlideId data-type="PlusSlideTitle"
+                                                                            data-ide="PlusSlideTitle-@Model.ScenarioSlideId">
+                                                                        Save
+                                                                    </button>
+
+                                                                    <button class="bouton-plus-cancel btn btn-outline-danger p-1" id="cancelBtn-PlusSlideTitle-@Model.ScenarioSlideId"
+                                                                            data-ScenarioSlideId=@Model.ScenarioSlideId data-type="PlusSlideTitle"
+                                                                            data-ide="PlusSlideTitle-@Model.ScenarioSlideId">
+                                                                        Cancel
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <h6 class="alert-light">No Slide</h6>
+                                                    <div>
+                                                        <button class="bouton-plus mr-2" id="Btn-AddSlide-@Model.ScenarioInfoId" data-ScenarioInfoId=@Model.ScenarioInfoId data-type="AddSlide"
+                                                                data-ide="AddSlide-@Model.ScenarioInfoId">
+                                                            Add Slide
+                                                            <img class="imgLittle" style="width: 20px;" src="~/Content/Images/plusinfo.png" />
+                                                        </button>
+                                                        <div id="editSection-AddSlide-@Model.ScenarioInfoId" style="display: none;">
+                                                            <div class="input-group w-100">
+                                                                <div class="input-group-append">
+
+                                                                    <button class="bouton-plus-save btn btn-outline-success p-1" id="saveBtn-AddSlide-@Model.ScenarioInfoId"
+                                                                            data-ScenarioInfoId=@Model.ScenarioInfoId data-type="AddSlide"
+                                                                            data-ide="AddSlide-@Model.ScenarioInfoId">
+                                                                        Continue
+                                                                    </button>
+
+                                                                    <button class="bouton-plus-cancel btn btn-outline-danger p-1" id="cancelBtn-AddSlide-@Model.ScenarioInfoId"
+                                                                            data-ScenarioInfoId=@Model.ScenarioInfoId data-type="AddSlide"
+                                                                            data-ide="AddSlide-@Model.ScenarioInfoId">
+                                                                        Cancel
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        }
+                        @if (Model.IGList != null)
+                        {
+                            <div class="row-md-6 mt-1 w-100">
+                                <div class="d-flex justify-content-between px-2" style="background-color: #b2c4e4">
+                                    @if (Model.Language == "es")
+                                    {
+                                        <p class="lessonHeader">Lección: @Model.Scenario_number</p>
+
+                                    }
+                                    else if (Model.Language == "fr")
+                                    {
+                                        <p class="lessonHeader">Leçon: @Model.Scenario_number</p>
+                                    }
+                                    else
+                                    {
+                                        <p class="lessonHeader">Lesson: @Model.Scenario_number</p>
+                                    }
+                                    <p class=""><strong>@Model.Level_name</strong></p>
+                                </div>
+                                @foreach (var i in @Model.IGList)
+                                {
+                                    <div class="input-group-append">
+                                        <p id="text-IGTitle-@i.IdTitle-@Model.ScenarioIGId">@Html.Raw(i.Name)</p>
+                                        <button class="bouton ml-2 mb-3" id="Btn-IGTitle-@i.IdTitle-@Model.ScenarioIGId" data-IdTitle=@i.IdTitle data-ScenarioIGId=@Model.ScenarioIGId data-type="IGTitle"
+                                                data-ide="IGTitle-@i.IdTitle-@Model.ScenarioIGId" title="Edit IG Title">
+                                            <img class="imgLittle" style="width: 20px;" src="~/Content/Images/editinfo.png" alt="Edit">
+                                        </button>
+                                        @*▼▼▼▼▼▼▼▼▼▼===DELETE IG TITLE===▼▼▼▼▼▼▼▼▼▼*@
+                                        <button class="bouton-delete ml-2 mb-3" id="Btn-DeleteIGTitle-@i.IdTitle"
+                                                data-IdTitle=@i.IdTitle
+                                                data-type="DeleteIGTitle"
+                                                data-ide="DeleteIGTitle-@i.IdTitle" title="Delete IG Title">
+                                            <img class="imgLittle" style="width: 20px;" src="~/Content/Images/deleteinfo.png" alt="Delete">
+                                        </button>
+                                        <div id="editSection-DeleteIGTitle-@i.IdTitle" style="display: none;">
+                                            <div class="input-group alert-danger w-100 mx-4">
+                                                @*<h6 class="alert-danger">Êtes-vous sûr d'effacer ?</h6>*@
+                                                <h5 class="alert-danger">Are you sure you want to delete ?</h5>
+                                                <div class="input-group-append mx-2">
+
+                                                    <button class="bouton-delete-save btn btn-outline-success p-1 mx-1" id="saveBtn-DeleteIGTitle-@i.IdTitle"
+                                                            data-IdTitle=@i.IdTitle
+                                                            data-type="DeleteIGTitle"
+                                                            data-ide="DeleteIGTitle-@i.IdTitle">
+                                                        Yes
+                                                    </button>
+
+                                                    <button class="bouton-delete-cancel btn btn-outline-danger p-1 mx-1" id="cancelBtn-DeleteIGTitle-@i.IdTitle"
+                                                            data-IdTitle=@i.IdTitle
+                                                            data-type="DeleteIGTitle"
+                                                            data-ide="DeleteIGTitle-@i.IdTitle">
+                                                        Cancel
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @*▲▲▲▲▲▲▲▲▲▲===DELETE IG TITLE===▲▲▲▲▲▲▲▲▲▲*@
+                                    </div>
+                                    <div id="editSection-IGTitle-@i.IdTitle-@Model.ScenarioIGId" style="display: none;">
+                                        <div class="input-group w-100">
+                                            <input type="text" id="editInput-IGTitle-@i.IdTitle-@Model.ScenarioIGId" class="form-control input-lg" />
+                                            <div class="input-group-append">
+
+                                                <button class="bouton-save btn btn-outline-success p-1" id="saveBtn-IGTitle-@i.IdTitle-@Model.ScenarioIGId"
+                                                        data-IdTitle=@i.IdTitle data-ScenarioIGId=@Model.ScenarioIGId data-type="IGTitle"
+                                                        data-ide="IGTitle-@i.IdTitle-@Model.ScenarioIGId">
+                                                    Save
+                                                </button>
+
+                                                <button class="bouton-cancel btn btn-outline-danger p-1" id="cancelBtn-IGTitle-@i.IdTitle-@Model.ScenarioIGId"
+                                                        data-IdTitle=@i.IdTitle data-ScenarioIGId=@Model.ScenarioIGId data-type="IGTitle"
+                                                        data-ide="IGTitle-@i.IdTitle-@Model.ScenarioIGId">
+                                                    Cancel
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @*▼▼▼▼▼▼▼▼▼▼=== AJOUTER IG SUBTITLE ===▼▼▼▼▼▼▼▼▼▼*@
+                                    <div class="ml-3">
+                                        <button class="bouton-plus mr-2" id="Btn-PlusIGSubTitle-@i.IdTitle" data-IdTitle=@i.IdTitle data-type="PlusIGSubTitle"
+                                                data-ide="PlusIGSubTitle-@i.IdTitle" title="Add IG SubTitle">
+                                            <img class="imgLittle" style="width: 20px;" src="~/Content/Images/plusinfo.png" />
+                                        </button>
+                                        <div id="editSection-PlusIGSubTitle-@i.IdTitle" style="display: none;">
+                                            <div class="input-group w-100">
+                                                <input type="text" id="editInput-PlusIGSubTitle-@i.IdTitle" class="form-control input-lg" />
+                                                <div class="input-group-append">
+
+                                                    <button class="bouton-plus-save btn btn-outline-success p-1" id="saveBtn-PlusIGSubTitle-@i.IdTitle"
+                                                            data-IdTitle=@i.IdTitle data-type="PlusIGSubTitle"
+                                                            data-ide="PlusIGSubTitle-@i.IdTitle">
+                                                        Save
+                                                    </button>
+
+                                                    <button class="bouton-plus-cancel btn btn-outline-danger p-1" id="cancelBtn-PlusIGSubTitle-@i.IdTitle"
+                                                            data-IdTitle=@i.IdTitle data-type="PlusIGSubTitle"
+                                                            data-ide="PlusIGSubTitle-@i.IdTitle">
+                                                        Cancel
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @*▲▲▲▲▲▲▲▲▲▲===AJOUTER IG SUBTITLE===▲▲▲▲▲▲▲▲▲▲*@
+                                    if (i.Subtitles.Count != 0)
+                                    {
+                                        foreach (var j in i.Subtitles)
+                                        {
+                                            <ul>
+                                                <li class="bullet-custom">
+                                                    @*========CHANGE BULLETS===========*@
+                                                    <select id="SelectBulletIGSubTitle-@i.IdTitle-@j.IdSubtitle" data-type="SelectBulletIGSubTitle"
+                                                            data-IdTitle=@i.IdTitle data-IdSubTitle=@j.IdSubtitle
+                                                            data-ide="IGSubTitle-@i.IdTitle-@j.IdSubtitle"
+                                                            class="selectBullet form-select">
+                                                        @foreach (var d in ViewBag.listBullets)
+                                                        {
+                                                            <option value="@d.Key"
+                                                                    @if (d.Key == j.BulletTypeID) { <text> selected</text> }>
+                                                                @Html.Raw(@d.Value)
+                                                            </option>
+                                                        }
+                                                    </select>
+                                                    @*========CHANGE BULLETS===========*@
+                                                    <div class="input-group-append">
+                                                        <p id="text-IGSubTitle-@i.IdTitle-@j.IdSubtitle">@Html.Raw(j.Name)</p>
+                                                        <button class="bouton ml-2 mb-3" id="Btn-IGSubTitle-@i.IdTitle-@j.IdSubtitle" data-IdTitle=@i.IdTitle data-IdSubTitle=@j.IdSubtitle data-type="IGSubTitle"
+                                                                data-ide="IGSubTitle-@i.IdTitle-@j.IdSubtitle" title="Edit IG SubTitle">
+                                                            <img class="imgLittle" style="width: 20px;" src="~/Content/Images/editinfo.png" alt="Edit">
+                                                        </button>
+                                                        @*▼▼▼▼▼▼▼▼▼▼===DELETE IG SUBTITLE===▼▼▼▼▼▼▼▼▼▼*@
+                                                        <button class="bouton-delete ml-2 mb-3" id="Btn-DeleteIGSubTitle-@j.IdSubtitle"
+                                                                data-IdSubTitle=@j.IdSubtitle
+                                                                data-type="DeleteIGSubTitle"
+                                                                data-ide="DeleteIGSubTitle-@j.IdSubtitle" title="Delete IG SubTitle">
+                                                            <img class="imgLittle" style="width: 20px;" src="~/Content/Images/deleteinfo.png" alt="Delete">
+                                                        </button>
+                                                        <div id="editSection-DeleteIGSubTitle-@j.IdSubtitle" style="display: none;">
+                                                            <div class="input-group alert-danger w-100 mx-4">
+                                                                @*<h6 class="alert-danger">Êtes-vous sûr d'effacer ?</h6>*@
+                                                                <h5 class="alert-danger">Are you sure you want to delete ?</h5>
+                                                                <div class="input-group-append mx-2">
+
+                                                                    <button class="bouton-delete-save btn btn-outline-success p-1 mx-1" id="saveBtn-DeleteIGSubTitle-@j.IdSubtitle"
+                                                                            data-IdSubTitle=@j.IdSubtitle
+                                                                            data-type="DeleteIGSubTitle"
+                                                                            data-ide="DeleteIGSubTitle-@j.IdSubtitle">
+                                                                        Yes
+                                                                    </button>
+
+                                                                    <button class="bouton-delete-cancel btn btn-outline-danger p-1 mx-1" id="cancelBtn-DeleteIGSubTitle-@j.IdSubtitle"
+                                                                            data-IdSubTitle=@j.IdSubtitle
+                                                                            data-type="DeleteIGSubTitle"
+                                                                            data-ide="DeleteIGSubTitle-@j.IdSubtitle">
+                                                                        Cancel
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        @*▲▲▲▲▲▲▲▲▲▲===DELETE IG SUBTITLE===▲▲▲▲▲▲▲▲▲▲*@
+                                                    </div>
+                                                    <div id="editSection-IGSubTitle-@i.IdTitle-@j.IdSubtitle" style="display: none;">
+                                                        <div class="input-group w-100">
+                                                            <input type="text" id="editInput-IGSubTitle-@i.IdTitle-@j.IdSubtitle" class="form-control input-lg" />
+                                                            <div class="input-group-append">
+
+                                                                <button class="bouton-save btn btn-outline-success p-1" id="saveBtn-IGSubTitle-@i.IdTitle-@j.IdSubtitle"
+                                                                        data-IdTitle=@i.IdTitle data-IdSubTitle=@j.IdSubtitle data-type="IGSubTitle"
+                                                                        data-ide="IGSubTitle-@i.IdTitle-@j.IdSubtitle" data-bulletpointid="@j.BulletTypeID">
+                                                                    Save
+                                                                </button>
+
+                                                                <button class="bouton-cancel btn btn-outline-danger p-1" id="cancelBtn-IGSubTitle-@i.IdTitle-@j.IdSubtitle"
+                                                                        data-IdTitle=@i.IdTitle data-IdSubTitle=@j.IdSubtitle data-type="IGSubTitle"
+                                                                        data-ide="IGSubTitle-@i.IdTitle-@j.IdSubtitle">
+                                                                    Cancel
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    @if (j.Bullets.Count != 0)
+                                                    {
+                                                        <ul class="">
+                                                            @foreach (var v in j.Bullets)
+                                                            {
+                                                                <li class="bullet-custom">
+                                                                    @*========CHANGE BULLETS===========*@
+                                                                    <select id="SelectBulletIGBullet-@i.IdTitle-@j.IdSubtitle" data-type="SelectBulletIGBullet"
+                                                                            data-IdBullet=@v.IdBullet data-IdSubTitle=@j.IdSubtitle
+                                                                            data-ide="IGBullet-@v.IdBullet-@j.IdSubtitle"
+                                                                            class="selectBullet form-select">
+                                                                        @foreach (var d in ViewBag.listBullets)
+                                                                        {
+                                                                            <option value="@d.Key"
+                                                                                    @if (d.Key == v.BulletTypeID) { <text> selected</text> }>
+                                                                                @Html.Raw(@d.Value)
+                                                                            </option>
+                                                                        }
+                                                                    </select>
+                                                                    @*========CHANGE BULLETS===========*@
+                                                                    <div class="input-group-append">
+                                                                        <p id="text-IGBullet-@v.IdBullet-@j.IdSubtitle">@Html.Raw(v.Name)</p>
+                                                                        <button class="bouton ml-2 mb-3" id="Btn-IGBullet-@v.IdBullet-@j.IdSubtitle" data-IdBullet=@v.IdBullet data-IdSubTitle=@j.IdSubtitle data-type="IGBullet"
+                                                                                data-ide="IGBullet-@v.IdBullet-@j.IdSubtitle" title="Edit IG Bullet">
+                                                                            <img class="imgLittle" style="width: 20px;" src="~/Content/Images/editinfo.png" alt="Edit">
+                                                                        </button>
+                                                                        @*▼▼▼▼▼▼▼▼▼▼===DELETE IG BULLET===▼▼▼▼▼▼▼▼▼▼*@
+                                                                        <button class="bouton-delete ml-2 mb-3" id="Btn-DeleteIGBullet-@v.IdBullet"
+                                                                                data-IdBullet=@v.IdBullet
+                                                                                data-type="DeleteIGBullet"
+                                                                                data-ide="DeleteIGBullet-@v.IdBullet" title="Delete IG Bullet">
+                                                                            <img class="imgLittle" style="width: 20px;" src="~/Content/Images/deleteinfo.png" alt="Delete">
+                                                                        </button>
+                                                                        <div id="editSection-DeleteIGBullet-@v.IdBullet" style="display: none;">
+                                                                            <div class="input-group alert-danger w-100 mx-4">
+                                                                                @*<h6 class="alert-danger">Êtes-vous sûr d'effacer ?</h6>*@
+                                                                                <h5 class="alert-danger">Are you sure you want to delete ?</h5>
+                                                                                <div class="input-group-append mx-2">
+
+                                                                                    <button class="bouton-delete-save btn btn-outline-success p-1 mx-1" id="saveBtn-DeleteIGBullet-@v.IdBullet"
+                                                                                            data-IdBullet=@v.IdBullet
+                                                                                            data-type="DeleteIGBullet"
+                                                                                            data-ide="DeleteIGBullet-@v.IdBullet">
+                                                                                        Yes
+                                                                                    </button>
+
+                                                                                    <button class="bouton-delete-cancel btn btn-outline-danger p-1 mx-1" id="cancelBtn-DeleteIGBullet-@v.IdBullet"
+                                                                                            data-IdBullet=@v.IdBullet
+                                                                                            data-type="DeleteIGBullet"
+                                                                                            data-ide="DeleteIGBullet-@v.IdBullet">
+                                                                                        Cancel
+                                                                                    </button>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        @*▲▲▲▲▲▲▲▲▲▲===DELETE IG BULLET===▲▲▲▲▲▲▲▲▲▲*@
+                                                                    </div>
+                                                                    <div id="editSection-IGBullet-@v.IdBullet-@j.IdSubtitle" style="display: none;">
+                                                                        <div class="input-group w-100">
+                                                                            <input type="text" id="editInput-IGBullet-@v.IdBullet-@j.IdSubtitle" class="form-control input-lg" />
+                                                                            <div class="input-group-append">
+
+                                                                                <button class="bouton-save btn btn-outline-success p-1" id="saveBtn-IGBullet-@v.IdBullet-@j.IdSubtitle"
+                                                                                        data-IdBullet=@v.IdBullet data-IdSubTitle=@j.IdSubtitle data-type="IGBullet"
+                                                                                        data-ide="IGBullet-@v.IdBullet-@j.IdSubtitle" data-bulletpointid="@v.BulletTypeID">
+                                                                                    Save
+                                                                                </button>
+
+                                                                                <button class="bouton-cancel btn btn-outline-danger p-1" id="cancelBtn-IGSubTitle-@v.IdBullet-@j.IdSubtitle"
+                                                                                        data-IdBullet=@v.IdBullet data-IdSubTitle=@j.IdSubtitle data-type="IGBullet"
+                                                                                        data-ide="IGBullet-@v.IdBullet-@j.IdSubtitle">
+                                                                                    Cancel
+                                                                                </button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                            }
+                                                        </ul>
+                                                    }
+                                                    @*▼▼▼▼▼▼▼▼▼▼=== AJOUTER IG BULLETS ===▼▼▼▼▼▼▼▼▼▼*@
+                                                    <div class="ml-3">
+                                                        <button class="bouton-plus mr-2" id="Btn-PlusIGBullet-@j.IdSubtitle" data-IdSubTitle=@j.IdSubtitle data-type="PlusIGBullet"
+                                                                data-ide="PlusIGBullet-@j.IdSubtitle" title="Add IG Bullet">
+                                                            <img class="imgLittle" style="width: 20px;" src="~/Content/Images/plusinfo.png" />
+                                                        </button>
+                                                        <div id="editSection-PlusIGBullet-@j.IdSubtitle" style="display: none;">
+                                                            <div class="input-group w-100">
+                                                                <input type="text" id="editInput-PlusIGBullet-@j.IdSubtitle" class="form-control input-lg" />
+                                                                <div class="input-group-append">
+
+                                                                    <button class="bouton-plus-save btn btn-outline-success p-1" id="saveBtn-PlusIGBullet-@j.IdSubtitle"
+                                                                            data-IdSubTitle=@j.IdSubtitle data-type="PlusIGBullet"
+                                                                            data-ide="PlusIGBullet-@j.IdSubtitle">
+                                                                        Save
+                                                                    </button>
+
+                                                                    <button class="bouton-plus-cancel btn btn-outline-danger p-1" id="cancelBtn-PlusIGBullet-@j.IdSubtitle"
+                                                                            data-IdSubTitle=@j.IdSubtitle data-type="PlusIGBullet"
+                                                                            data-ide="PlusIGBullet-@j.IdSubtitle">
+                                                                        Cancel
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    @*▲▲▲▲▲▲▲▲▲▲===AJOUTER IG BULLETS===▲▲▲▲▲▲▲▲▲▲*@
+                                                </li>
+                                            </ul>
+                                        }
+                                    }
+                                    <hr class="border-dark" />
+                                }
+                                @*▼▼▼▼▼▼▼▼▼▼===AJOUTER IG TITLE===▼▼▼▼▼▼▼▼▼▼*@
+                                <div>
+                                    <button class="bouton-plus mr-2" id="Btn-PlusIGTitle-@Model.ScenarioIGId" data-ScenarioIGId=@Model.ScenarioIGId data-type="PlusIGTitle"
+                                            data-ide="PlusIGTitle-@Model.ScenarioIGId" title="Add IG Title">
+                                        <img class="imgLittle" style="width: 20px;" src="~/Content/Images/plusinfo.png" />
+                                    </button>
+                                    <div id="editSection-PlusIGTitle-@Model.ScenarioIGId" style="display: none;">
+                                        <div class="input-group w-100">
+                                            <input type="text" id="editInput-PlusIGTitle-@Model.ScenarioIGId" class="form-control input-lg" />
+                                            <div class="input-group-append">
+
+                                                <button class="bouton-plus-save btn btn-outline-success p-1" id="saveBtn-PlusIGTitle-@Model.ScenarioIGId"
+                                                        data-ScenarioIGId=@Model.ScenarioIGId data-type="PlusIGTitle"
+                                                        data-ide="PlusIGTitle-@Model.ScenarioIGId">
+                                                    Save
+                                                </button>
+
+                                                <button class="bouton-plus-cancel btn btn-outline-danger p-1" id="cancelBtn-PlusIGTitle-@Model.ScenarioIGId"
+                                                        data-ScenarioIGId=@Model.ScenarioIGId data-type="PlusIGTitle"
+                                                        data-ide="PlusIGTitle-@Model.ScenarioIGId">
+                                                    Cancel
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @*▲▲▲▲▲▲▲▲▲▲===AJOUTER IG TITLE===▲▲▲▲▲▲▲▲▲▲*@
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="row-md-6 mt-1 w-100">
+                                <div class="d-flex justify-content-between px-2" style="background-color: #b2c4e4">
+                                    @if (Model.Language == "es")
+                                    {
+                                        <p class="lessonHeader">Lección: @Model.Scenario_number</p>
+
+                                    }
+                                    else if (Model.Language == "fr")
+                                    {
+                                        <p class="lessonHeader">Leçon: @Model.Scenario_number</p>
+                                    }
+                                    else
+                                    {
+                                        <p class="lessonHeader">Lesson: @Model.Scenario_number</p>
+                                    }
+                                    <p class=""><strong>@Model.Level_name</strong></p>
+                                </div>
+                                @if (Model.ScenarioIGId != null)
+                                {
+                                    <h6 class="alert-light pt-1 px-3">Empty IG</h6>
+                                    <div class="pt-1 px-3">
+                                        <button class="bouton-plus mr-2" id="Btn-PlusIGTitle-@Model.ScenarioIGId" data-ScenarioIGId=@Model.ScenarioIGId data-type="PlusIGTitle"
+                                                data-ide="PlusIGTitle-@Model.ScenarioIGId">
+                                            Add Title
+                                            <img class="imgLittle" style="width: 20px;" src="~/Content/Images/plusinfo.png" />
+                                        </button>
+                                        <div class="" id="editSection-PlusIGTitle-@Model.ScenarioIGId" style="display: none;">
+                                            <div class="input-group w-100">
+                                                <input type="text" id="editInput-PlusIGTitle-@Model.ScenarioIGId" class="form-control input-lg" />
+                                                <div class="input-group-append">
+
+                                                    <button class="bouton-plus-save btn btn-outline-success p-1" id="saveBtn-PlusIGTitle-@Model.ScenarioIGId"
+                                                            data-ScenarioIGId=@Model.ScenarioIGId data-type="PlusIGTitle"
+                                                            data-ide="PlusIGTitle-@Model.ScenarioIGId">
+                                                        Save
+                                                    </button>
+
+                                                    <button class="bouton-plus-cancel btn btn-outline-danger p-1" id="cancelBtn-PlusIGTitle-@Model.ScenarioIGId"
+                                                            data-ScenarioIGId=@Model.ScenarioIGId data-type="PlusIGTitle"
+                                                            data-ide="PlusIGTitle-@Model.ScenarioIGId">
+                                                        Cancel
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="pt-1 px-3">
+                                        <h6 class="alert-light">No IG</h6>
+                                        <div>
+                                            <button class="bouton-plus mr-2" id="Btn-AddIG-@Model.ScenarioInfoId" data-ScenarioInfoId=@Model.ScenarioInfoId data-type="AddIG"
+                                                    data-ide="AddIG-@Model.ScenarioInfoId">
+                                                Add IG
+                                                <img class="imgLittle" style="width: 20px;" src="~/Content/Images/plusinfo.png" />
+                                            </button>
+                                            <div id="editSection-AddIG-@Model.ScenarioInfoId" style="display: none;">
+                                                <div class="input-group w-100">
+                                                    <div class="input-group-append">
+
+                                                        <button class="bouton-plus-save btn btn-outline-success p-1" id="saveBtn-AddIG-@Model.ScenarioInfoId"
+                                                                data-ScenarioInfoId=@Model.ScenarioInfoId data-type="AddIG"
+                                                                data-ide="AddIG-@Model.ScenarioInfoId">
+                                                            Continue
+                                                        </button>
+
+                                                        <button class="bouton-plus-cancel btn btn-outline-danger p-1" id="cancelBtn-AddIG-@Model.ScenarioInfoId"
+                                                                data-ScenarioInfoId=@Model.ScenarioInfoId data-type="AddIG"
+                                                                data-ide="AddIG-@Model.ScenarioInfoId">
+                                                            Cancel
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-8 input-group-append">
+                                <div class="col-1 mr-3">
+                                    <div id="newScButton" class="btn btn-outline-light" title="New scenario">
+                                        <img src="~/Content/Images/new.png" alt="New">
+                                    </div>
+                                    <div class="modal fade" id="NewScenarioModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title">New scenario</h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="input-group-append justify-content-center align-content-center" id="newScList">
+                                                        <button id="BlankAsNewButton" class="btn btn-outline-info w-25 ml-2">Blank</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="">
+                                    <div class="dropdown input-group-append">
+                                        <h6 class="dropdown-header">Scenarios</h6>
+                                        <select class="form-select form-control" onchange="location = this.value;">
+                                            <option value="blank">Scenario Invalid</option>
+                                            @foreach (var i in ViewBag.listScenarios)
+                                            {
+                                                <option value="@Url.RouteUrl(new { controller = "edit", action = "Index", id = i.Id, type = i.Type, lang = i.Language })"
+                                                        @if (i.Id == Model.Id && i.Type == Model.Type && i.Language == Model.Language) { <text> selected</text> }>
+                                                    @i.Scenario_number - @i.Level_name (@i.Language, @i.Type)
+                                                </option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h1 class="row m-2">The scenario does not exist</h1>
+                    </div>
+                }
+            </div>
+        </div>}
+    else
+    {
+<div class="container ml-3">
+    <div class="row">
+        <div class="col-8 input-group-append">
+            <div class="col-1 mr-3">
+                <div id="newScButton" class="btn btn-outline-light" title="New scenario">
+                    <img src="~/Content/Images/new.png" alt="New">
+                </div>
+                <div class="modal fade" id="NewScenarioModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">New scenario</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="input-group-append justify-content-center align-content-center" id="newScList">
+                                    <button id="BlankAsNewButton" class="btn btn-outline-info w-25 ml-2">Blank</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="">
+                <div class="dropdown input-group-append">
+                    <h6 class="dropdown-header">Scenarios</h6>
+                    <select class="form-select form-control" onchange="location = this.value;">
+                        <option value="blank">Scenario Invalid</option>
+                        @foreach (var i in ViewBag.listScenarios)
+                        {
+                            <option value="@Url.RouteUrl(new { controller = "edit", action = "Index", id = i.Id, type = i.Type, lang = i.Language })">
+                                @i.Scenario_number - @i.Level_name (@i.Language, @i.Type)
+                            </option>
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <h1 class="row m-2">The scenario does not exist</h1>
+</div>
+    }
+    @if (Model != null)
+    {
+        <div id="printableContent">
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog" id="modal-preview-dialog">
+                    <div class="modal-content" id="modal-preview-content">
+                        <div class="modal-header">
+                            <h2 class="modal-title text-center">Preview</h2>
+                        </div>
+                        <div class="modal-body">
+                            <div class="">
+                                <div class="flex-column">
+                                    @if (Model.SlideList != null)
+                                    {
+                                        <div class="row-md-6">
+                                            <div class="table-responsive w-100">
+                                                <table border="1" cellpadding="0" cellspacing="0" class="w-100">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>
+                                                                <div class="p-2">
+                                                                    <div class="input-group-append">
+                                                                        @if (Model.Language == "es")
+                                                                        {
+                                                                            <p class="lessonHeader">Lección: @Model.Scenario_number</p>
+
+                                                                        }
+                                                                        else if (Model.Language == "fr")
+                                                                        {
+                                                                            <p class="lessonHeader">Leçon: @Model.Scenario_number</p>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <p class="lessonHeader">Lesson: @Model.Scenario_number</p>
+                                                                        }
+                                                                        <p class="mx-1">-</p>
+                                                                        <p id="text-InfoTitle-@Model.ScenarioInfoId">@Model.Level_name</p>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <div class="p-2">
+                                                                    @foreach (var o in Model.SlideList)
+                                                                    {
+                                                                        <p>@Html.Raw(o.Name)</p>
+                                                                        if (o.Subtitles.Count != 0)
+                                                                        {
+                                                                            foreach (var k in o.Subtitles)
+                                                                            {
+                                                                                <ul>
+                                                                                    <li class="bullet-custom @k.BulletType">
+                                                                                        @Html.Raw(k.Name)
+                                                                                        @if (k.Bullets.Count != 0)
+                                                                                        {
+                                                                                            <ul class="">
+                                                                                                @foreach (var u in k.Bullets)
+                                                                                                {
+                                                                                                    <li class="bullet-custom @u.BulletType">@Html.Raw(u.Name)</li>
+                                                                                                }
+                                                                                            </ul>
+                                                                                        }
+                                                                                    </li>
+                                                                                </ul>
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <table border="1" cellpadding="0" cellspacing="0" class="w-100">
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <div class="pt-1 px-3">
+                                                            @if (Model.Language == "es")
+                                                            {
+                                                                <p class="lessonHeader">Lección: @Model.Scenario_number</p>
+
+                                                            }
+                                                            else if (Model.Language == "fr")
+                                                            {
+                                                                <p class="lessonHeader">Leçon: @Model.Scenario_number</p>
+                                                            }
+                                                            else
+                                                            {
+                                                                <p class="lessonHeader">Lesson: @Model.Scenario_number</p>
+                                                            }
+                                                            @if (Model.ScenarioSlideId != null)
+                                                            {
+                                                                <h6 class="alert-light">Empty Slide</h6>
+                                                            }
+                                                            else
+                                                            {
+                                                                <h6 class="alert-light">No Slide</h6>
+                                                            }
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    }
+                                    @if (Model.IGList != null)
+                                    {
+                                        <div class="row-md-6 mt-1 w-100">
+                                            <div class="d-flex justify-content-between px-2" style="background-color: #b2c4e4">
+                                                @if (Model.Language == "es")
+                                                {
+                                                    <p class="lessonHeader">Lección: @Model.Scenario_number</p>
+
+                                                }
+                                                else if (Model.Language == "fr")
+                                                {
+                                                    <p class="lessonHeader">Leçon: @Model.Scenario_number</p>
+                                                }
+                                                else
+                                                {
+                                                    <p class="lessonHeader">Lesson: @Model.Scenario_number</p>
+                                                }
+                                                <p class=""><strong>@Model.Level_name.ToString()</strong></p>
+                                            </div>
+                                            @foreach (var i in @Model.IGList)
+                                            {
+                                                <p>@Html.Raw(@i.Name)</p>
+                                                if (i.Subtitles.Count != 0)
+                                                {
+                                                    foreach (var j in i.Subtitles)
+                                                    {
+                                                        <ul>
+                                                            <li class="bullet-custom @j.BulletType">
+                                                                @Html.Raw(j.Name)
+                                                                @if (j.Bullets.Count != 0)
+                                                                {
+                                                                    <ul>
+                                                                        @foreach (var v in j.Bullets)
+                                                                        {
+                                                                            <li class="bullet-custom @v.BulletType">@Html.Raw(v.Name)</li>
+                                                                        }
+                                                                    </ul>
+                                                                }
+                                                            </li>
+                                                        </ul>
+                                                    }
+                                                }
+                                                <hr class="border-dark" />
+                                            }
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="row-md-6 mt-1 w-100">
+                                            <div class="d-flex justify-content-between px-2" style="background-color: #b2c4e4">
+                                                @if (Model.Language == "es")
+                                                {
+                                                    <p class="lessonHeader">Lección: @Model.Scenario_number</p>
+
+                                                }
+                                                else if (Model.Language == "fr")
+                                                {
+                                                    <p class="lessonHeader">Leçon: @Model.Scenario_number</p>
+                                                }
+                                                else
+                                                {
+                                                    <p class="lessonHeader">Lesson: @Model.Scenario_number</p>
+                                                }
+                                                <p class=""><strong>@Model.Level_name</strong></p>
+                                            </div>
+                                            @if (Model.ScenarioIGId != null)
+                                            {
+                                                <h6 class="alert-light pt-1 px-3">Empty IG</h6>
+                                            }
+                                            else
+                                            {
+                                                <h6 class="alert-light pt-1 px-3">No IG</h6>
+                                            }
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div id="modalfooter" class="modal-footer row justify-content-center align-content-center">
+                            <div class="col flex-column col-1">
+                                <button type="button" id="printButton" class="btn btn-outline-light"
+                                        data-id="@Model.Id"
+                                        data-type="@Model.Type"
+                                        data-lang="@Model.Language">
+                                    <img src="~/Content/Images/print.png" alt="Print" />
+                                    <br />
+                                    Print
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>}
+</body>
+</html>
+
+<script>
+
+    $(document).ready(function () {
+
+        $(".checkbox-menu input[type='checkbox']").each(function () {
+            if ($(this).closest("li").attr("id") == "type") {
+                if (getUrlParams("selectedType") == $(this).val()) {
+                    $(this).prop('checked', true);
+                }
+            }
+            if ($(this).closest("li").attr("id") == "language") {
+                if (getUrlParams("selectedLang") == $(this).val()) {
+                    $(this).prop('checked', true);
+                }
+            }
+        });
+
+
+        var nextSlide = getNextSlide(1);
+        if (nextSlide == "") {
+            $('#nextSc-Button').attr('href', window.location.href);
+        } else {
+            $('#nextSc-Button').attr('href', `http://${window.location.host}/${nextSlide}`);
+        }
+
+        var prevSlide = getNextSlide(-1);
+        if (prevSlide == "") {
+            $('#previousSc-Button').attr('href', window.location.href);
+        } else {
+            $('#previousSc-Button').attr('href', `http://${window.location.host}/${prevSlide}`);
+        }
+
+        $(".checkbox-menu").on("change", "input[type='checkbox']", async function () {
+            $(this).closest("li").toggleClass("active", this.checked);
+            addOrUpdateParameter();
+
+            var nextSlide = getNextSlide(1);
+            if (nextSlide == "") {
+                $('#nextSc-Button').attr('href', window.location.href);
+            } else {
+                $('#nextSc-Button').attr('href', `http://${window.location.host}/${nextSlide}`);
+            }
+
+            var prevSlide = getNextSlide(-1);
+            if (prevSlide == "") {
+                $('#previousSc-Button').attr('href', window.location.href);
+            } else {
+                $('#previousSc-Button').attr('href', `http://${window.location.host}/${prevSlide}`);
+            }
+            console.log('prevSlide ', prevSlide);
+        });
+
+        // get next aslide according to checked options
+        function getNextSlide(forwardOrBackward) {
+
+            var selectedIndex = $("#scenario-select").prop("selectedIndex");
+            var newSearch = $("#searchKeyWord").val();
+            var checkedValuesTypes = [];
+            var checkedValuesLanguages = [];
+
+            $(".checkbox-menu input[type='checkbox']:checked").each(function () {
+                if ($(this).closest("li").attr("id") == "type") {
+                    checkedValuesTypes.push($(this).val());
+                }
+                if ($(this).closest("li").attr("id") == "language") {
+                    checkedValuesLanguages.push($(this).val());
+                }
+            });
+            // add all types to array if no type is selected
+            if (checkedValuesTypes.length == 0) {
+                $(".checkbox-menu input[type='checkbox']").each(function () {
+                    if ($(this).closest("li").attr("id") == "type") {
+                        checkedValuesTypes.push($(this).val());
+                    }
+                });
+            }
+            // add all languages to array if no language is selected
+            if (checkedValuesLanguages.length == 0) {
+                $(".checkbox-menu input[type='checkbox']").each(function () {
+                    if ($(this).closest("li").attr("id") == "language") {
+                        checkedValuesLanguages.push($(this).val());
+                    }
+                });
+            }
+            var selectedLanguage = "";
+            var selectedType = "";
+            var selectedId = "";
+            if (forwardOrBackward > 0) {
+                for (let i = selectedIndex + 1; i < $("#scenario-select option").length; i++) {
+                    var optionValue = $("#scenario-select option").eq(i).val();
+                    var id = optionValue.substring(optionValue.lastIndexOf('/') + 1, optionValue.indexOf('?'));
+                    var lang = optionValue.substring(optionValue.lastIndexOf("=") + 1);
+                    var type = optionValue.substring(optionValue.indexOf("=") + 1, optionValue.indexOf("&"));
+                    if (checkedValuesTypes.indexOf(type) != -1 && checkedValuesLanguages.indexOf(lang) != -1 && optionValue.includes(newSearch)) {
+                        selectedLanguage = lang;
+                        selectedType = type;
+                        selectedId = id;
+                        break;
+                    }
+                }
+            } else {
+                for (let i = selectedIndex - 1; i >= 0; i--) {
+                    var optionValue = $("#scenario-select option").eq(i).val();
+                    var id = optionValue.substring(optionValue.lastIndexOf('/') + 1, optionValue.indexOf('?'));
+                    var lang = optionValue.substring(optionValue.lastIndexOf("=") + 1);
+                    var type = optionValue.substring(optionValue.indexOf("=") + 1, optionValue.indexOf("&"));
+                    if (checkedValuesTypes.indexOf(type) != -1 && checkedValuesLanguages.indexOf(lang) != -1 && optionValue.includes(newSearch)) {
+                        selectedLanguage = lang;
+                        selectedType = type;
+                        selectedId = id;
+                        break;
+                    }
+                }
+            }
+            if (selectedId == "" || selectedType == "" || selectedLanguage == "") {
+                return "";
+            }
+
+            var url = `edit/index/${selectedId}?type=${selectedType}&lang=${selectedLanguage}`;
+            if (checkedValuesTypes.length == 1) {
+                url += `&selectedType=${checkedValuesTypes[0]}`;
+            }
+            if (checkedValuesLanguages.length == 1) {
+                url += `&selectedLang=${checkedValuesLanguages[0]}`;
+            }
+            return url;
+        }
+
+        //updated url parameters selectedLang and selectedType based on filters in order to
+        //preserve filters on the next page
+        function addOrUpdateParameter() {
+            // Get the current URL parameters
+            var urlParams = new URLSearchParams(window.location.search);
+
+            urlParams.delete("selectedLang");
+            urlParams.delete("selectedType");
+
+            $(".checkbox-menu input[type='checkbox']:checked").each(function () {
+                if ($(this).closest("li").attr("id") == "type") {
+                    urlParams.set("selectedType", $(this).val());
+                }
+                if ($(this).closest("li").attr("id") == "language") {
+                    urlParams.set("selectedLang", $(this).val());
+                }
+            });
+            // Add or update a parameter
+            var newUrl = window.location.pathname + '?' + urlParams.toString();
+            window.history.replaceState({}, '', newUrl);
+        }
+
+        function getUrlParams(key) {
+            // Get the query string from the URL
+            var queryString = window.location.search;
+
+            // Create a URLSearchParams object
+            var searchParams = new URLSearchParams(queryString);
+
+            // Create an object to store the parameters
+            var params = {};
+
+            return searchParams.get(key);
+        }
+
+        $('#printButton').click(function () {
+            var id = $(this).attr("data-id")
+            var type = $(this).attr("data-type")
+            var lang = $(this).attr("data-lang")
+            window.location.href = `/print/Index/${id}?type=${type}&lang=${lang}`
+        })
+        $('#modalbutton').click(function () {
+            $('#exampleModal').modal('show');
+        });
+        // When the edit button is clicked
+        $(".bouton").click(function () {
+            var anyId = $(this).attr("data-ide")
+            $("#text-" + anyId).hide();
+            $("#Btn-" + anyId).hide();
+            $("#editInput-" + anyId).val($("#text-" + anyId).html().trim());
+            $("#editSection-" + anyId).show();
+        });
+
+        // When the save button is clicked
+        $(".bouton-save").click(function () {
+            var anyId = $(this).attr("data-ide")
+            var idtitle = $(this).attr("data-idtitle")
+            var idsubtitle = $(this).attr("data-idsubtitle")
+            var idbullet = $(this).attr("data-idbullet")
+            var scenarioslideid = $(this).attr("data-scenarioslideid")
+            var scenarioigid = $(this).attr("data-scenarioigid")
+            var scenarioid = $(this).attr("data-scenarioid")
+            var scenarioinfoid = $(this).attr("data-scenarioinfoid")
+            var languageid = $(this).attr("data-languageid")
+            var typeid = $(this).attr("data-typeid")
+            var type = $(this).attr("data-type")
+            var scenarioBulletID = $(this).attr("data-bulletpointid")
+
+            var newValue = $("#editInput-" + anyId).val();
+            $("#text-" + anyId).html(newValue);
+            $("#editSection-" + anyId).hide();
+            $("#text-" + anyId).show();
+            $("#Btn-" + anyId).show();
+            if (type == "InfoTitle") {
+                $.ajax({
+                    url: `/api/ScenarioInfoes/${scenarioinfoid}/vs600/fr`,
+                    type: "PUT",
+                    data: {
+                        Title: $("#text-" + anyId).html(),
+                        IDScenario: scenarioid,
+                        IDScenarioInfo: scenarioinfoid,
+                        IDLanguage: languageid,
+                        IDSimulatorType: typeid
+                    },
+                    success: function (data) {
+                        console.log("success")
+                        console.log(data)
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("error")
+                        console.log(error)
+                    }
+                })
+            }
+            if (type == "SlideTitle") {
+                $.ajax({
+                    url: `/api/ScenarioSlideTitles/${parseInt(idtitle)}/vs600/fr`,
+                    type: "PUT",
+                    data: {
+                        Content: $("#text-" + anyId).html(),
+                        IDScenarioSlideTitle: idtitle,
+                        IDScenarioSlide: scenarioslideid
+                    },
+                    success: function (data) {
+                        console.log("success")
+                        console.log(data)
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("error")
+                        console.log(error)
+                    }
+                })
+            }
+            if (type == "SlideSubTitle") {
+                $.ajax({
+                    url: `/api/ScenarioSlideSubTitles/${parseInt(idsubtitle)}/vs600/fr`,
+                    type: "PUT",
+                    data: {
+                        Content: $("#text-" + anyId).html(),
+                        IDScenarioSlideSubTitle: idsubtitle,
+                        IDScenarioSlideTitle: idtitle,
+                        IDBulletPoints: scenarioBulletID
+                    },
+                    success: function (data) {
+                        console.log("success")
+                        console.log(data)
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("error")
+                        console.log(error)
+                    }
+                })
+            }
+            if (type == "SlideBullet") {
+                $.ajax({
+                    url: `/api/ScenarioSlideSubTitleBullets/${parseInt(idbullet)}/vs600/fr`,
+                    type: "PUT",
+                    data: {
+                        Content: $("#text-" + anyId).html(),
+                        IDScenarioSlideSubTitleBullets: idbullet,
+                        IDScenarioSlideSubTitle: idsubtitle,
+                        IDBulletPoints: scenarioBulletID
+                    },
+                    success: function (data) {
+                        console.log("success")
+                        console.log(data)
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("error")
+                        console.log(error)
+                    }
+                })
+            }
+            if (type == "IGTitle") {
+                $.ajax({
+                    url: `/api/ScenarioIGTitles/${parseInt(idtitle)}/vs600/fr`,
+                    type: "PUT",
+                    data: {
+                        Content: $("#text-" + anyId).html(),
+                        IDScenarioIGTitle: idtitle,
+                        IDScenarioIG: scenarioigid
+                    },
+                    success: function (data) {
+                        console.log("success")
+                        console.log(data)
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("error")
+                        console.log(error)
+                    }
+                })
+            }
+            if (type == "IGSubTitle") {
+                $.ajax({
+                    url: `/api/ScenarioIGSubTitles/${parseInt(idsubtitle)}/vs600/fr`,
+                    type: "PUT",
+                    data: {
+                        Content: $("#text-" + anyId).html(),
+                        IDScenarioIGSubTitle: idsubtitle,
+                        IDScenarioIGTitle: idtitle,
+                        IDBulletPoints: scenarioBulletID
+                    },
+                    success: function (data) {
+                        console.log("success")
+                        console.log(data)
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("error")
+                        console.log(error)
+                    }
+                })
+            }
+            if (type == "IGBullet") {
+                $.ajax({
+                    url: `/api/ScenarioIGSubTitleBullets/${parseInt(idbullet)}/vs600/fr`,
+                    type: "PUT",
+                    data: {
+                        Content: $("#text-" + anyId).html(),
+                        IDScenarioIGSubTitleBullets: idbullet,
+                        IDScenarioIGSubTitle: idsubtitle,
+                        IDBulletPoints: scenarioBulletID
+                    },
+                    success: function (data) {
+                        console.log("success")
+                        console.log(data)
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("error")
+                        console.log(error)
+                    }
+                })
+            }
+        });
+
+        // When the cancel button is clicked
+        $(".bouton-cancel").click(function () {
+            var anyId = $(this).attr("data-ide")
+            $("#editSection-" + anyId).hide();
+            $("#Btn-" + anyId).show();
+            $("#text-" + anyId).show();
+        });
+
+        $(".bouton-delete").click(function () {
+            var anyId = $(this).attr("data-ide")
+            $("#Btn-" + anyId).hide();
+            $("#editSection-" + anyId).show();
+        });
+        $(".bouton-delete-save").click(function () {
+            var anyId = $(this).attr("data-ide")
+            var idtitle = $(this).attr("data-idtitle")
+            var idsubtitle = $(this).attr("data-idsubtitle")
+            var idbullet = $(this).attr("data-idbullet")
+            var type = $(this).attr("data-type")
+            $("#editSection-" + anyId).hide();
+            $("#text-" + anyId).show();
+            $("#Btn-" + anyId).show();
+            if (type == 'DeleteSlideTitle') {
+                $.ajax({
+                    url: `/api/ScenarioSlideTitles/${idtitle}/vs600/fr`,
+                    type: "DELETE",
+                    success: function (data) {
+                        console.log("success")
+                        console.log(data)
+                        location.reload();
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("error")
+                        console.log(error)
+                    }
+                })
+            }
+
+            if (type == 'DeleteSlideSubTitle') {
+                $.ajax({
+                    url: `/api/ScenarioSlideSubTitles/${idsubtitle}/vs600/fr`,
+                    type: "DELETE",
+                    success: function (data) {
+                        console.log("success")
+                        console.log(data)
+                        location.reload();
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("error")
+                        console.log(error)
+                    }
+                })
+            }
+
+            if (type == 'DeleteSlideBullet') {
+                $.ajax({
+                    url: `/api/ScenarioSlideSubTitleBullets/${idbullet}/vs600/fr`,
+                    type: "DELETE",
+                    success: function (data) {
+                        console.log("success")
+                        console.log(data)
+                        location.reload();
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("error")
+                        console.log(error)
+                    }
+                })
+            }
+
+            if (type == 'DeleteIGTitle') {
+                $.ajax({
+                    url: `/api/ScenarioIGTitles/${idtitle}/vs600/fr`,
+                    type: "DELETE",
+                    success: function (data) {
+                        console.log("success")
+                        console.log(data)
+                        location.reload();
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("error")
+                        console.log(error)
+                    }
+                })
+            }
+
+            if (type == 'DeleteIGSubTitle') {
+                $.ajax({
+                    url: `/api/ScenarioIGSubTitles/${idsubtitle}/vs600/fr`,
+                    type: "DELETE",
+                    success: function (data) {
+                        console.log("success")
+                        console.log(data)
+                        location.reload();
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("error")
+                        console.log(error)
+                    }
+                })
+            }
+
+            if (type == 'DeleteIGBullet') {
+                $.ajax({
+                    url: `/api/ScenarioIGSubTitleBullets/${idbullet}/vs600/fr`,
+                    type: "DELETE",
+                    success: function (data) {
+                        console.log("success")
+                        console.log(data)
+                        location.reload();
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("error")
+                        console.log(error)
+                    }
+                })
+            }
+        });
+        $(".bouton-delete-cancel").click(function () {
+            var anyId = $(this).attr("data-ide")
+            $("#editSection-" + anyId).hide();
+            $("#Btn-" + anyId).show();
+            $("#text-" + anyId).show();
+        });
+
+        //plus
+        $(".bouton-plus").click(function () {
+            var anyId = $(this).attr("data-ide")
+            $("#Btn-" + anyId).hide();
+            $("#editSection-" + anyId).show();
+        })
+
+        $(".bouton-plus-save").click(async function () {
+            var anyId = $(this).attr("data-ide")
+            var idtitle = $(this).attr("data-idtitle")
+            var idsubtitle = $(this).attr("data-idsubtitle")
+            var scenarioslideid = $(this).attr("data-scenarioslideid")
+            var scenarioigid = $(this).attr("data-scenarioigid")
+            var type = $(this).attr("data-type")
+            var idbullet = $(this).attr("data-idbullet") == null ? "1" : $(this).attr("data-idbullet");
+            var scenarioinfoid = $(this).attr("data-scenarioinfoid")
+
+            var newValue = $("#editInput-" + anyId).val();
+            console.log(newValue)
+            $("#editSection-" + anyId).hide();
+            $("#Btn-" + anyId).show();
+
+            if (type == 'PlusSlideTitle') {
+                $.ajax({
+                    url: `/api/ScenarioSlideTitles/nothing/vs600/fr`,
+                    type: "POST",
+                    data: {
+                        Content: newValue.toString(),
+                        IDScenarioSlide: scenarioslideid,
+                    },
+                    success: function (data) {
+                        console.log("success")
+                        console.log(data)
+                        location.reload();
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("error")
+                        console.log(error)
+                    }
+                })
+            }
+
+            if (type == 'PlusSlideSubTitle') {
+                console.log(type);
+                $.ajax({
+                    url: `/api/ScenarioSlideSubTitles/nothing/vs600/fr`,
+                    type: "POST",
+                    data: {
+                        Content: newValue.toString(),
+                        IDScenarioSlideTitle: idtitle,
+                        IdBulletPoints: idbullet
+                    },
+                    success: function (data) {
+                        console.log("success")
+                        console.log(data)
+                        location.reload();
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("error")
+                        console.log(error)
+                    }
+                })
+            }
+
+            if (type == 'PlusSlideBullet') {
+                $.ajax({
+                    url: `/api/ScenarioSlideSubTitleBullets/nothing/vs600/fr`,
+                    type: "POST",
+                    data: {
+                        Content: newValue.toString(),
+                        IDScenarioSlideSubTitle: idsubtitle,
+                        IDBulletPoints: idbullet
+                    },
+                    success: function (data) {
+                        console.log("success")
+                        console.log(data)
+                        location.reload();
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("error")
+                        console.log(error)
+                    }
+                })
+            }
+
+            if (type == 'PlusIGTitle') {
+                $.ajax({
+                    url: `/api/ScenarioIGTitles/nothing/vs600/fr`,
+                    type: "POST",
+                    data: {
+                        Content: newValue.toString(),
+                        IDScenarioIG: scenarioigid,
+                    },
+                    success: function (data) {
+                        console.log("success")
+                        console.log(data)
+                        location.reload();
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("error")
+                        console.log(error)
+                    }
+                })
+            }
+
+            if (type == 'PlusIGSubTitle') {
+                $.ajax({
+                    url: `/api/ScenarioIGSubTitles/nothing/vs600/fr`,
+                    type: "POST",
+                    data: {
+                        Content: newValue.toString(),
+                        IDScenarioIGTitle: idtitle,
+                        IDBulletPoints: idbullet
+                    },
+                    success: function (data) {
+                        console.log("success")
+                        console.log(data)
+                        location.reload();
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("error")
+                        console.log(error)
+                    }
+                })
+            }
+
+            if (type == 'PlusIGBullet') {
+                $.ajax({
+                    url: `/api/ScenarioIGSubTitleBullets/nothing/vs600/fr`,
+                    type: "POST",
+                    data: {
+                        Content: newValue.toString(),
+                        IDScenarioIGSubTitle: idsubtitle,
+                        IDBulletPoints: idbullet
+                    },
+                    success: function (data) {
+                        console.log("success")
+                        console.log(data)
+                        location.reload();
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("error")
+                        console.log(error)
+                    }
+                })
+            }
+            if (type == 'AddSlide') {
+                $.ajax({
+                    url: `/api/ScenarioSlides/nothing/vs600/fr`,
+                    type: "POST",
+                    data: {
+                        IDScenarioInfo: scenarioinfoid,
+                    },
+                    success: function (data) {
+                        console.log("success")
+                        console.log(data)
+                        location.reload();
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("error")
+                        console.log(error)
+                    }
+                })
+            }
+            if (type == 'AddIG') {
+                $.ajax({
+                    url: `/api/ScenarioIGs/nothing/vs600/fr`,
+                    type: "POST",
+                    data: {
+                        IDScenarioInfo: scenarioinfoid,
+                    },
+                    success: function (data) {
+                        console.log("success")
+                        console.log(data)
+                        location.reload();
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("error")
+                        console.log(error)
+                    }
+                })
+            }
+        })
+
+        $(".bouton-plus-cancel").click(function () {
+            var anyId = $(this).attr("data-ide")
+            $("#editSection-" + anyId).hide();
+            $("#Btn-" + anyId).show();
+            $("#text-" + anyId).show();
+        })
+
+        //Taskbar
+        $("#newScButton").click(function () {
+            $('#NewScenarioModal').modal('show')
+        });
+        $("#CopyAsNewButton").click(function () {
+            console.log("CopyAsNewButton")
+            var ScenarioInfoId = $(this).attr("data-ScenarioInfoId")
+            var lang = $(this).attr("data-lang")
+            var type = $(this).attr("data-type")
+            window.location.href = `/newcopy/${ScenarioInfoId}/${type}/${lang}`
+        });
+        $("#BlankAsNewButton").click(function () {
+            window.location.href = "/newblank"
+        });
+
+        $("#newScButtonSame").click(function () {
+            if ($("#newScListSame").is(":visible")) {
+                $("#newScListSame").hide();
+            } else {
+                $("#newScListSame").show();
+            }
+        });
+        $("#CopyAsNewButtonSame").click(function () {
+            console.log("CopyAsNewButton")
+            var ScenarioInfoId = $(this).attr("data-ScenarioInfoId")
+            var lang = $(this).attr("data-lang")
+            var type = $(this).attr("data-type")
+            window.location.href = `/newcopy/${ScenarioInfoId}/${type}/${lang}`
+        });
+        $("#BlankAsNewButtonSame").click(function () {
+            window.location.href = "/newblank"
+        });
+
+        $("#DeleteButton").click(function () {
+            $('#DeleteScModal').modal('show');
+        });
+        $("#DeleteButtonContinue").click(function () {
+            var ScenarioInfoId = $(this).attr("data-ScenarioInfoId")
+            $.ajax({
+                url: `/api/ScenarioInfoes/${ScenarioInfoId}/vs600/fr`,
+                type: "DELETE",
+                success: function (data) {
+                    console.log("success")
+                    console.log(data)
+                    location.reload();
+                    //window.location.href = "/home"
+                },
+                error: function (xhr, status, error) {
+                    console.log("error")
+                    console.log(error)
+                }
+            })
+        });
+
+        $("#AddLanguageButton").click(function () {
+            $("#AddLanguageModal").modal('show')
+            $('#alert-add-language-exists').hide()
+            $('#alert-add-language').hide()
+        });
+
+        $("#AddLanguageAdd").click(function () {
+            var languagecomputed = $("#AddLanguageText").val()
+            console.log(languagecomputed)
+            if (languagecomputed.trim() != "") {
+                $("#AddLanguageInputs").hide()
+                $('#alert-add-language-loading').show()
+                $.ajax({
+                    url: `/api/APIScenario/FullCopyNewLanguage/${languagecomputed}`,
+                    type: "POST",
+                    success: function (data) {
+                        console.log("success")
+                        console.log(data)
+                        location.reload();
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("error")
+                        console.log(error)
+                        $("#AddLanguageInputs").show()
+                        $('#alert-add-language-exists').show()
+                        $('#alert-add-language').hide()
+                    }
+                })
+            } else {
+                $('#alert-add-language-loading').hide()
+                $('#alert-add-language-exists').hide()
+                $('#alert-add-language').show()
+            }
+        });
+
+        $("#DelLanguageButton").click(function () {
+            $("#DelLanguageModal").modal('show')
+            $('#alert-del-language-loading').hide()
+            $('#alert-del-language').hide()
+        });
+
+        $("#DelLanguageDel").click(function () {
+            var languageId = $("#DelLanguageSelect").val()
+            $("#DelLanguageInputs").hide()
+            console.log(languageId)
+            if (languageId == 0) {
+                console.log("Choose a language please")
+                $('#alert-del-language').show()
+                $("#DelLanguageInputs").show()
+            } else {
+                $('#alert-del-language-loading').show()
+                $('#alert-del-language').hide()
+                $.ajax({
+                    url: `/api/Languages/${languageId}/d/d`,
+                    type: "DELETE",
+                    success: function (data) {
+                        console.log("success")
+                        console.log(data)
+                        location.reload();
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("error")
+                        console.log(error)
+                        location.reload();
+                    }
+                })
+
+                //location.reload();
+            }
+        });
+
+        $(".selectBullet").change(function () {
+            var selectedValue = $(this).find(":selected").val()
+            var anyId = $(this).attr("data-ide")
+            var idtitle = $(this).attr("data-idtitle")
+            var idsubtitle = $(this).attr("data-idsubtitle")
+            var idbullet = $(this).attr("data-idbullet")
+            var type = $(this).attr("data-type")
+            console.log(idsubtitle, idtitle, selectedValue)
+            if (type == "SelectBulletSlideSubTitle") {
+                $.ajax({
+                    url: `/api/ScenarioSlideSubTitles/${parseInt(idsubtitle)}/vs600/fr`,
+                    type: "PUT",
+                    data: {
+                        Content: $("#text-" + anyId).html(),
+                        IDScenarioSlideSubTitle: idsubtitle,
+                        IDScenarioSlideTitle: idtitle,
+                        IDBulletPoints: selectedValue
+                    },
+                    success: function (data) {
+                        console.log("success")
+                        console.log(data)
+                        location.reload();
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("error")
+                        console.log(error)
+                        location.reload();
+                    }
+                })
+            }
+            if (type == "SelectBulletSlideBullet") {
+                $.ajax({
+                    url: `/api/ScenarioSlideSubTitleBullets/${parseInt(idbullet)}/vs600/fr`,
+                    type: "PUT",
+                    data: {
+                        Content: $("#text-" + anyId).html(),
+                        IDScenarioSlideSubTitleBullets: idbullet,
+                        IDScenarioSlideSubTitle: idsubtitle,
+                        IDBulletPoints: selectedValue
+                    },
+                    success: function (data) {
+                        console.log("success")
+                        console.log(data)
+                        location.reload();
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("error")
+                        console.log(error)
+                        location.reload();
+                    }
+                })
+            }
+            if (type == "SelectBulletIGSubTitle") {
+                $.ajax({
+                    url: `/api/ScenarioIGSubTitles/${parseInt(idsubtitle)}/vs600/fr`,
+                    type: "PUT",
+                    data: {
+                        Content: $("#text-" + anyId).html(),
+                        IDScenarioIGSubTitle: idsubtitle,
+                        IDScenarioIGTitle: idtitle,
+                        IDBulletPoints: selectedValue
+                    },
+                    success: function (data) {
+                        console.log("success")
+                        console.log(data)
+                        location.reload();
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("error")
+                        console.log(error)
+                        location.reload();
+                    }
+                })
+            }
+            if (type == "SelectBulletIGBullet") {
+                $.ajax({
+                    url: `/api/ScenarioIGSubTitleBullets/${parseInt(idbullet)}/vs600/fr`,
+                    type: "PUT",
+                    data: {
+                        Content: $("#text-" + anyId).html(),
+                        IDScenarioIGSubTitleBullets: idbullet,
+                        IDScenarioIGSubTitle: idsubtitle,
+                        IDBulletPoints: selectedValue
+                    },
+                    success: function (data) {
+                        console.log("success")
+                        console.log(data)
+                        location.reload();
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("error")
+                        console.log(error)
+                        location.reload();
+                    }
+                })
+            }
+
+        })
+    });
+</script>
+
+<style>
+
+    .checkbox-menu li label {
+        display: block;
+        padding: 3px 10px;
+        clear: both;
+        font-weight: normal;
+        line-height: 1.42857143;
+        color: #333;
+        white-space: nowrap;
+        margin: 0;
+        transition: background-color .4s ease;
+    }
+
+    .checkbox-menu li {
+        list-style-type: none;
+    }
+
+    .checkbox-menu li input {
+        margin: 0px 5px;
+        top: 2px;
+        position: relative;
+    }
+
+    .checkbox-menu li.active label {
+        background-color: #cbcbff;
+        font-weight: bold;
+    }
+
+    .list-bullet:before {
+        content: "";
+        display: inline-block;
+        width: 5.5px;
+        height: 5.5px;
+        margin-top: 10px;
+        margin-right: 10px;
+        border-radius: 50%;
+        border: 1px solid black;
+    }
+
+    .imgLittle {
+        border: none;
+        color: white;
+        width: 20px;
+        height: 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        padding: 3px;
+        cursor: pointer;
+        border-radius: 3px;
+    }
+
+    .imgLittle:hover {
+        outline: 1px solid #3a96dc;
+        background-color: #86e9ff;
+    }
+
+    img {
+        width: 25px
+    }
+
+    input {
+        max-width: 100%;
+    }
+
+    .bouton {
+        border: none;
+        padding: 0;
+        background-color: transparent;
+        cursor: pointer;
+        display: inline-block;
+    }
+
+    .bouton-plus {
+        border: none;
+        padding: 0;
+        background-color: transparent;
+        cursor: pointer;
+        display: inline-block;
+    }
+
+    .bouton-delete {
+        border: none;
+        padding: 0;
+        background-color: transparent;
+        cursor: pointer;
+        display: inline-block;
+    }
+
+    #modal-preview-content {
+        margin: auto;
+        padding: 10px;
+        max-height: calc(100vh - 200px);
+        overflow-y: auto;
+    }
+
+    #modal-preview-dialog {
+        max-width: 75%;
+    }
+
+    .bullet-custom {
+        list-style: none;
+    }
+
+    .bullet-arrow:before {
+        content: "\27A2";
+        margin-right: 15px;
+    }
+
+    .bullet-check:before {
+        content: "\2713";
+        margin-right: 15px;
+        font-weight: bold;
+    }
+
+    .bullet-flower:before {
+        content: "\1BFD";
+        margin-right: 15px;
+    }
+
+    .bullet-white:before {
+        content: "\25E6";
+        margin-right: 15px;
+    }
+
+    .bullet-default:before {
+        content: "\2022";
+        margin-right: 15px;
+    }
+    
+    keyframes ldio-78xrib7pvk {
+      0% { opacity: 1 }
+      100% { opacity: 0 }
+    }
+    .ldio-78xrib7pvk div {
+      left: 94px;
+      top: 48px;
+      position: absolute;
+      animation: ldio-78xrib7pvk linear 1s infinite;
+      background: #71d8fe;
+      width: 12px;
+      height: 24px;
+      border-radius: 6px / 12px;
+      transform-origin: 6px 52px;
+    }.ldio-78xrib7pvk div:nth-child(1) {
+      transform: rotate(0deg);
+      animation-delay: -0.9166666666666666s;
+      background: #71d8fe;
+    }.ldio-78xrib7pvk div:nth-child(2) {
+      transform: rotate(30deg);
+      animation-delay: -0.8333333333333334s;
+      background: #71d8fe;
+    }.ldio-78xrib7pvk div:nth-child(3) {
+      transform: rotate(60deg);
+      animation-delay: -0.75s;
+      background: #71d8fe;
+    }.ldio-78xrib7pvk div:nth-child(4) {
+      transform: rotate(90deg);
+      animation-delay: -0.6666666666666666s;
+      background: #71d8fe;
+    }.ldio-78xrib7pvk div:nth-child(5) {
+      transform: rotate(120deg);
+      animation-delay: -0.5833333333333334s;
+      background: #71d8fe;
+    }.ldio-78xrib7pvk div:nth-child(6) {
+      transform: rotate(150deg);
+      animation-delay: -0.5s;
+      background: #71d8fe;
+    }.ldio-78xrib7pvk div:nth-child(7) {
+      transform: rotate(180deg);
+      animation-delay: -0.4166666666666667s;
+      background: #71d8fe;
+    }.ldio-78xrib7pvk div:nth-child(8) {
+      transform: rotate(210deg);
+      animation-delay: -0.3333333333333333s;
+      background: #71d8fe;
+    }.ldio-78xrib7pvk div:nth-child(9) {
+      transform: rotate(240deg);
+      animation-delay: -0.25s;
+      background: #71d8fe;
+    }.ldio-78xrib7pvk div:nth-child(10) {
+      transform: rotate(270deg);
+      animation-delay: -0.16666666666666666s;
+      background: #71d8fe;
+    }.ldio-78xrib7pvk div:nth-child(11) {
+      transform: rotate(300deg);
+      animation-delay: -0.08333333333333333s;
+      background: #71d8fe;
+    }.ldio-78xrib7pvk div:nth-child(12) {
+      transform: rotate(330deg);
+      animation-delay: 0s;
+      background: #71d8fe;
+    }
+    .loadingio-spinner-spinner-806733ktqo4 {
+      width: 200px;
+      height: 200px;
+      display: inline-block;
+      overflow: hidden;
+      background: #f1f2f3;
+    }
+    .ldio-78xrib7pvk {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform: translateZ(0) scale(1);
+      backface-visibility: hidden;
+      transform-origin: 0 0; /* see note above */
+    }
+    .ldio-78xrib7pvk div { box-sizing: content-box; }
+</style>

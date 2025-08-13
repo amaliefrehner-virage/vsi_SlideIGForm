@@ -1,0 +1,708 @@
+@using SlideIGWebRetry.Models
+@using SlideIGWebRetry.HtmlHelperExtensions
+@model ScenarioListModel
+@{
+    ViewBag.Title = "Home";
+}
+
+<html>
+<head>
+    <script src="~/Scripts/jquery-3.6.4.js"></script>
+    <script src="~/Scripts/popper.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="~/Scripts/bootstrap.min.css">
+    <script src="~/Scripts/popper.js"></script>
+    <link href="~/Scripts/select2.min.css" rel="stylesheet" />
+    <script src="~/Scripts/select2.min.js"></script>
+</head>
+<body>
+    @if (@Model != null)
+    {
+    <div class="jumbotron container">
+        <div class="row">
+            <div class="col">
+                <h1 class="p-3">Filter</h1>
+                <div class="ml-2 pl-2" style="border: 2px solid #17A2B8">
+
+                    <div class="ml-2">
+                        <ul class="checkbox-menu allow-focus list-unstyled p-3 border-info" aria-labelledby="dropdownMenu1">
+                            Key Word
+                            <input id="searchKeyWordInput" class="form-control-plaintext" style="border: 2px solid #17A2B8" type="text" />
+
+                            Language
+                            @foreach (var lang in ViewBag.listLang)
+                            {
+                                <li id="language">
+                                    <label>
+                                        <input type="checkbox" value="@lang.Value">@lang.Value
+                                    </label>
+                                </li>
+                            }
+
+                            Type
+                            @foreach (var type in ViewBag.listType)
+                            {
+                                <li id="type">
+                                    <label>
+                                        <input type="checkbox" value="@type.Value">@type.Value
+                                    </label>
+                                </li>
+                            }
+
+                            Remove duplicates
+                            <li class="ml-2">
+                                <div class="input-group-append">
+                                    <input class="form-check-input" type="radio" name="DuplicateRadio" id="DuplicateRadio1" value="1" checked>
+                                    <label class="form-check-label " for="DuplicateRadio1">Normal</label>
+                                </div>
+                            </li>
+                            <li class="ml-2">
+                                <div class="input-group-append">
+                                    <input class="form-check-input" type="radio" name="DuplicateRadio" id="DuplicateRadio2" value="2">
+                                    <label class="form-check-label" for="DuplicateRadio2">Keep VS500</label>
+                                </div>
+                            </li>
+                            <li class="ml-2">
+                                <div class="input-group-append">
+                                    <input class="form-check-input" type="radio" name="DuplicateRadio" id="DuplicateRadio3" value="3">
+                                    <label class="form-check-label" for="DuplicateRadio3">Keep VS600</label>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="ml-2 pl-2" style="border: 2px solid #17A2B8; border-top:hidden">
+                    <h4 class="text-center mt-2">Mode </h4>
+                    <div class="input-group-append justify-content-center mb-2">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="ModeGuide" id="NormalModeRadio1" value="1" checked style="transform: scale(2);">
+                            <label class="form-check-label ml-1" for="NormalModeRadio1">
+                                Normal
+                            </label>
+                        </div>
+                        <div class="form-check ml-4">
+                            <input class="form-check-input" type="radio" name="ModeGuide" id="PrintModeRadio2" value="2" style="transform: scale(2);">
+                            <label class="form-check-label ml-1" for="PrintModeRadio2">
+                                Print
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div id="importMenus" class="ml-2 pl-2" style="border: 2px solid #17A2B8; border-top:hidden;">
+                    <div class="d-flex justify-content-center flex-column align-items-center mt-2 mb-2">
+                        <h4 class="text-center">Import menu</h4>
+                        <a id="importMenusButton" class="btn btn-outline-light">
+                            <img src="~/Content/Images/import.png"  width="40">
+                        </a>
+                        <div id="importedDiv" style="display:none;">
+                            <div class="input-group-append">
+                                <p id="importedDivText"></p>
+                                <a id="importedDivDeleteButton" class="btn btn-danger ml-3">
+                                    <img src="~/Content/Images/deleteinfo.png" width="15" />
+                                </a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div id="importJson" class="ml-2 pl-2" style="border: 2px solid #17A2B8; border-top:hidden;">
+                    <div class="d-flex justify-content-center flex-column align-items-center mt-2 mb-2">
+                        <h4 class="text-center">Import Json Files</h4>
+                        <a id="importJsonButton" class="btn btn-outline-light">
+                            <img src="~/Content/Images/json-file.png" width="40">
+                        </a>
+                        <div id="importedDiv" style="display:none;">
+                            <div class="input-group-append">
+                                <p id="importedJsonText"></p>
+                                <a id="importedJsonDeleteButton" class="btn btn-danger ml-3">
+                                    <img src="~/Content/Images/deleteinfo.png" width="15" />
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <br />
+            </div>
+            <div class="col">
+                <div class="p-3 input-group-append">
+                    <h1 class="">List of scenarios: </h1>
+                    <button id="buttonPrintallConfirm" class="btn btn-outline-primary ml-2" style="display:none; height:50px">Generate</button>
+                    <button id="buttonPrintallUncheck" class="btn btn-outline-primary ml-2" style="display:none; height:50px">Uncheck All</button>
+                    <button id="buttonPrintJsonConfirm" class="btn btn-outline-primary ml-2" style="display:none; height:50px">Generate JSON</button>
+                    <div class="modal fade" id="GenerateModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h3 class="modal-title">You are going to generate pages for an instructor guide...</h3>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="input-group-append justify-content-center align-content-center" id="newScList">
+                                        <h1 id="GeneratePdfSlideIGQuestion">Are you sure?</h1>
+                                        <button id="GeneratePdfSlideIG" class="btn btn-danger ml-2 px-3 py-2">Yes</button>
+                                        <div id="alert-instructorguide-loading" style="display:none;" class="text-center display-4">
+                                            Generating pages...
+                                            @Html.LoadingAnimation()                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal fade" id="GenerateJsonModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h3 class="modal-title">You are going to generate Json files for each ScenarioInfo in this list</h3>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="input-group-append justify-content-center align-content-center" id="newScList">
+                                        <h1 id="GenerateJsonConfirmHeader">Are you sure?</h1>
+                                        <button id="GenerateJsonConfirmButton" class="btn btn-danger ml-2 px-3 py-2">Yes</button>
+                                        <div id="alert-json-loading" style="display:none;" class="text-center display-4">
+                                            Generating Json ...
+                                            @Html.LoadingAnimation()
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <ul id="ListOfScenariosUL" class="pl-5 list-unstyled">
+                    @foreach (var i in Model.ScenariosList)
+                    {
+                        <li><a class="btn btn-info btn-lg mb-2" style="width:700px; text-align:start" href="@Url.RouteUrl(new { controller = "details", action = "Index", id = i.Id, type = i.Type, lang = i.Language })">@i.Scenario_number - @i.Level_name (@i.Type \ @i.Language) &raquo;</a></li>
+                    }
+                </ul>
+                <ul id="editModeScenarios" class="pl-5 list-unstyled" style="display:none; width:748px;">
+                    @foreach (var i in Model.ScenariosList)
+                    {
+                        <div class="input-group-append checkPrintdiv">
+                        <li class="bg-success mb-2 text-white h5 p-2" id="ScenarioLi-@i.Scenario_number-@i.Type-@i.Language" data-ide="@i.Scenario_number-@i.Type-@i.Language" data-id="ScenarioLi-@i.Scenario_number-@i.Type-@i.Language" data-print="@i.Id-@i.Type-@i.Language" style="width:500px; text-align:start;">
+                            <p>@i.Scenario_number - @i.Level_name (@i.Type \ @i.Language)</p>
+                        </li>
+                        <div class="form-check m-2">
+                            <input class="checkPrint Checkbox-0.1-vs500-en" id="Checkbox-@i.Scenario_number-@i.Type-@i.Language" data-ide="@i.Scenario_number-@i.Type-@i.Language" data-print="@i.Id-@i.Type-@i.Language" type="checkbox" checked>
+                        </div>
+                </div>
+            }
+                    </ul>
+                </div>
+                @System.Web.Configuration.WebConfigurationManager.AppSettings["siteVersion"]
+            </div>
+        </div>
+    }
+</body>
+</html>
+
+<script>
+
+    function GenerateListOfScenarios() {
+        var urlFormat = '@Url.RouteUrl(new { controller = "details", action = "Index", id = "__ID__", type = "__TYPE__", lang = "__LANG__" })';
+        var newSearch = $('#searchKeyWordInput').val();
+        var checkedValuesTypes = [];
+        var checkedValuesLanguages = [];
+        $('.checkbox-menu input[type="checkbox"]:checked').each(function () {
+            if ($(this).closest('li').attr('id') == 'type') {
+                checkedValuesTypes.push($(this).val());
+            }
+            if ($(this).closest('li').attr('id') == 'language') {
+                checkedValuesLanguages.push($(this).val());
+            }
+        });
+        console.log(newSearch)
+        var url = '/api/APIScenario/all?';
+        url += 'searchTerm=' + newSearch;
+        url += '&languages=' + (checkedValuesLanguages.length == 0 ? '' : checkedValuesLanguages.join(','));
+        url += '&types=' + (checkedValuesTypes.length == 0 ? '' : checkedValuesTypes.join(','));
+
+        var duplicatesModeValue = $("input[type=radio][name=DuplicateRadio]:checked").val();
+
+        console.log(duplicatesModeValue)
+        if (duplicatesModeValue == 1) {
+            console.log("normal mode")
+        } else if (duplicatesModeValue == 2) {
+            console.log("vs500 mode")
+            url += '&duplicates=' + "vs500"
+        } else if (duplicatesModeValue == 3) {
+            console.log("vs600 mode")
+            url += '&duplicates=' + "vs600"
+        }
+
+        var importedDiv = $("#importedDiv").is(':visible');
+
+        if (importedDiv) {
+            var listOfids_and_scnumber = get_cookie_content("listOfids_and_scnumber");
+            if (listOfids_and_scnumber == null) {
+                var listOfids_and_scnumber = "";
+                var listOfids_and_scnumber1 = get_cookie_content("listOfids_and_scnumber_1");
+                var listOfids_and_scnumber2 = get_cookie_content("listOfids_and_scnumber_2");
+            } else {
+                var listOfids_and_scnumber1 = "";
+                var listOfids_and_scnumber2 = "";
+            }
+
+            $.ajax({
+                url: url,
+                dataType: 'json',
+                success: function (data) {
+                    // update the ul list with the new options
+                    var $ul = $('#ListOfScenariosUL');
+                    var $ul2 = $('#editModeScenarios');
+                    $ul2.empty();
+                    $ul.empty();
+                    $.each(data.ScenariosList, function (index, item) {
+                        var id = item.Id;
+                        var type = item.Type;
+                        var lang = item.Language;
+                        var scenario_number = item.Scenario_number;
+                        var level_name = item.Level_name;
+
+                        if ((listOfids_and_scnumber.indexOf(id + ":" + scenario_number) >= 0) || (listOfids_and_scnumber1.indexOf(id + ":" + scenario_number) >= 0) || (listOfids_and_scnumber2.indexOf(id + ":" + scenario_number) >= 0)) {
+                            var url = urlFormat.replace('__ID__', id).replace('__TYPE__', type).replace('__LANG__', lang).replace('amp;', '');
+                            var $li = $('<li>');
+                            var $a = $('<a>').addClass('btn btn-info btn-lg mb-2').css('width', '700px').css('text-align', 'start').attr('href', url).text(scenario_number + ' - ' + level_name + ' (' + type + ' \\ ' + lang + ') »');
+                            $li.append($a);
+                            $ul.append($li);
+
+                            var $div2 = $('<div>').addClass('input-group-append checkPrintdiv');
+                            var $li2 = $('<li>').addClass('bg-success mb-2 text-white h5 p-2')
+                                .attr('id', 'ScenarioLi-' + scenario_number + '-' + type + '-' + lang)
+                                .attr('data-ide', scenario_number + '-' + type + '-' + lang)
+                                .attr('data-id', 'ScenarioLi-' + scenario_number + '-' + type + '-' + lang)
+                                .attr('data-print', id + '-' + type + '-' + lang)
+                                .css('width', '500px')
+                                .css('text-align', 'start')
+                                .append($('<p>').text(scenario_number + ' - ' + level_name + ' (' + type + ' \\ ' + lang + ')'));
+
+                            var $formCheck2 = $('<div>').addClass('form-check m-2');
+                            var $checkbox2 = $('<input>').addClass('checkPrint Checkbox-0.1-vs500-en')
+                                .attr('id', 'Checkbox-' + scenario_number + '-' + type + '-' + lang)
+                                .attr('data-ide', scenario_number + '-' + type + '-' + lang)
+                                .attr('type', 'checkbox')
+                                .attr('data-print', id + '-' + type + '-' + lang)
+                                .prop('checked', true);
+
+                            $div2.append($li2);
+                            $formCheck2.append($checkbox2);
+                            $div2.append($formCheck2);
+                            $ul2.append($div2);
+                        }
+                    });
+                },
+                cache: true // enable caching of search results
+            });
+        } else {
+            $.ajax({
+                url: url,
+                dataType: 'json',
+                success: function (data) {
+                    // update the ul list with the new options
+                    var $ul = $('#ListOfScenariosUL');
+                    var $ul2 = $('#editModeScenarios');
+                    $ul2.empty();
+                    $ul.empty();
+                    $.each(data.ScenariosList, function (index, item) {
+                        var id = item.Id;
+                        var type = item.Type;
+                        var lang = item.Language;
+                        var scenario_number = item.Scenario_number;
+                        var level_name = item.Level_name;
+                        var url = urlFormat.replace('__ID__', id).replace('__TYPE__', type).replace('__LANG__', lang).replace('amp;', '');
+                        var $li = $('<li>');
+                        var $a = $('<a>').addClass('btn btn-info btn-lg mb-2').css('width', '700px').css('text-align', 'start').attr('href', url).text(scenario_number + ' - ' + level_name + ' (' + type + ' \\ ' + lang + ') »');
+                        $li.append($a);
+                        $ul.append($li);
+
+                        var $div2 = $('<div>').addClass('input-group-append checkPrintdiv');
+                        var $li2 = $('<li>').addClass('bg-success mb-2 text-white h5 p-2')
+                            .attr('id', 'ScenarioLi-' + scenario_number + '-' + type + '-' + lang)
+                            .attr('data-ide', scenario_number + '-' + type + '-' + lang)
+                            .attr('data-id', 'ScenarioLi-' + scenario_number + '-' + type + '-' + lang)
+                            .attr('data-print', id + '-' + type + '-' + lang)
+                            .css('width', '500px')
+                            .css('text-align', 'start')
+                            .append($('<p>').text(scenario_number + ' - ' + level_name + ' (' + type + ' \\ ' + lang + ')'));
+
+                        var $formCheck2 = $('<div>').addClass('form-check m-2');
+                        var $checkbox2 = $('<input>').addClass('checkPrint Checkbox-0.1-vs500-en')
+                            .attr('id', 'Checkbox-' + scenario_number + '-' + type + '-' + lang)
+                            .attr('data-ide', scenario_number + '-' + type + '-' + lang)
+                            .attr('type', 'checkbox')
+                            .attr('data-print', id + '-' + type + '-' + lang)
+                            .prop('checked', true);
+
+                        $div2.append($li2);
+                        $formCheck2.append($checkbox2);
+                        $div2.append($formCheck2);
+                        $ul2.append($div2);
+                    });
+                },
+                cache: true // enable caching of search results
+            });
+        }
+    }
+
+    $("input[type=radio][name=ModeGuide]").on('change', function () {
+        if (this.value == 1) {
+            $("#editModeScenarios").hide()
+            $("#ListOfScenariosUL").show()
+            $("#buttonPrintallConfirm").hide()
+            $("#buttonPrintallUncheck").hide()
+            $("#buttonPrintJsonConfirm").hide()
+        } else {
+            $("#editModeScenarios").show()
+            $("#ListOfScenariosUL").hide()
+            $("#buttonPrintallConfirm").show()
+            $("#buttonPrintallUncheck").show()
+            $("#buttonPrintJsonConfirm").show()
+        }
+    })
+
+    $("input[type=radio][name=DuplicateRadio]").on('change', function () {
+        GenerateListOfScenarios()
+    })
+
+    $("#importedDivDeleteButton").on("click", function () {
+        $("#importedDiv").hide()
+        $("#importedDivText").html("")
+        $("#importMenusButton").show()
+        delete_cookie("listOfids_and_scnumber")
+        delete_cookie("listOfids_and_scnumber_1")
+        delete_cookie("listOfids_and_scnumber_2")
+        GenerateListOfScenarios()
+    })
+
+    $("#importMenusButton").on("click", function () {
+        console.log("importMenusButton");
+
+        // Create a hidden input element, and trigger it
+        let input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.cfg';
+        input.onchange = e => {
+
+            // Getting a hold of the file reference
+            let file = e.target.files[0];
+
+            // Setting up the FileReader object
+            let reader = new FileReader();
+            reader.readAsText(file, 'UTF-8');
+
+            // Here we tell the reader what to do when it's done reading...
+            reader.onload = readerEvent => {
+                let content = readerEvent.target.result; // This is the file content
+
+                if (file.name === "vsi_scenario_list.cfg") {
+                    let lines = content.split('\n');
+                    var listOfids_and_scnumber = ""
+                    for (let line of lines) {
+                        if (!line.includes("[--------------") && !line.includes("S_00") && line != "") {
+                            var Scenario_number = line.split("[")[1].split(" -")[0].trim().split("	")[0].trim()
+                            var id = line.split("[")[4].split("]")[0].trim()
+                            listOfids_and_scnumber += id + ":" + Scenario_number + ","
+                        }
+                    }
+                    $("#importedDiv").show()
+                    $("#importedDivText").html(file.name)
+                    $("#importMenusButton").hide()
+
+                    var byteSize = getByteSize(listOfids_and_scnumber);
+                    console.log(byteSize);
+
+                    if (byteSize <= 4000) {
+                        createCookie("listOfids_and_scnumber", listOfids_and_scnumber);
+                    } else {
+                        var start = 0;
+                        var end = 0;
+                        var i = 0;
+                        while (start < listOfids_and_scnumber.length) {
+                            end = start + 4000;
+
+                            // Ensure we don't cut off a pair
+                            while (end < listOfids_and_scnumber.length && listOfids_and_scnumber[end] !== ',') {
+                                end--;
+                            }
+
+                            // Remove trailing comma for all but last chunk
+                            if (end < listOfids_and_scnumber.length) {
+                                end--;
+                            }
+
+                            const chunk = listOfids_and_scnumber.slice(start, end + 1);
+                            createCookie(`listOfids_and_scnumber_${i + 1}`, chunk);
+
+                            if (end >= listOfids_and_scnumber.length) {
+                                break;
+                            }
+
+                            start = end + 1;
+                            i++;
+                        }
+                    }
+                    GenerateListOfScenarios()
+                } else {
+                    console.log("The file imported is not 'vsi_scenario_list.cfg'");
+                }
+            }
+        }
+        input.click();
+    })
+
+    $("#importJsonButton").on("click", function () {
+        console.log("importJsonButton");
+
+        // Create a hidden input element, and trigger it
+        let input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.json';
+        input.onchange = e => {
+
+            // Getting a hold of the file reference
+            let file = e.target.files[0];
+            if (!file.name.includes(".json") || !file.name.includes("_") || file.name.split("_").length !=3) {
+                alert("Error: File name must have the following format: \n\n[scenarioId]_[languageId]_[simulatorTypeId].json \n\n (for example: 912_4_1.json) ");
+                return;
+            }
+            let name = file.name.replace(".json", "").split("_");          
+
+            let id = name[0];
+            let language = name[1];
+            let simulatorType = name[2];
+
+            
+
+            // Setting up the FileReader object
+            let reader = new FileReader();
+            reader.readAsText(file, 'UTF-8');
+
+            // Here we tell the reader what to do when it's done reading...
+            reader.onload = readerEvent => {
+                let content = readerEvent.target.result; // This is the file content
+                console.log("content is ", content);
+                let content2 = JSON.stringify(content);
+                $.ajax({
+                    url: `/api/APIScenario/DeserializeJSONStringToScenarioInfo/${id}/${simulatorType}/${language}`,
+                    type: "PUT",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    processData: false,
+                    data:  content2,
+                    success: function (data) {
+                        alert("Success!")
+                    },
+                    error: function (xhr, status, error) {
+                        alert(JSON.stringify(xhr));
+                        console.log(error)
+                    }
+                })
+            }
+        }
+        input.click();
+    })
+
+
+    $("#buttonPrintallConfirm").on("click", function () {
+        console.log("buttonPrintallConfirm")
+        $('#GenerateModal').modal('show')
+    })
+    $("#buttonPrintJsonConfirm").on("click", function () {
+        console.log("buttonPrintallConfirm")
+        $('#GenerateJsonModal').modal('show')
+    })
+
+    $("#buttonPrintallUncheck").on('click', function () {
+        console.log("buttonPrintallUncheck")
+        $('.checkPrintdiv input[type="checkbox"]:checked').each(function () {
+            $(this).prop("checked", false)
+        });
+    })
+
+    $(".checkbox-menu").on("change", "input[type='checkbox']", function () {
+        $(this).closest("li").toggleClass("active", this.checked);
+    });
+
+    $('#searchKeyWordInput, .checkbox-menu input[type="checkbox"]').on('change', function () {
+        GenerateListOfScenarios()
+    });
+
+    $("#GeneratePdfSlideIG").on("click", function () {
+        console.log("GeneratePdfSlideIG");
+        var actuallist = []
+        var ul = $('#editModeScenarios');
+        var listofIds = "";
+        var listofIdsNotChecked = "";
+        var alert = $('#alert-instructorguide-loading')
+        $('#GeneratePdfSlideIGQuestion').hide()
+        $(this).hide()
+        alert.show()
+
+        ul.find('input').each(function () {
+            var dataprintid = $(this).attr('data-print')
+            console.log(dataprintid, " : ", $(this).is(':checked'))
+            if (!$(this).is(':checked')) {
+                listofIdsNotChecked += $(this).attr('data-print') + ",";
+            }
+        })
+        ul.find('li').each(function () {
+            var liId = $(this).attr('data-print');
+            console.log("listofidsnotchecked: ", listofIdsNotChecked);
+            if (!listofIdsNotChecked.includes(liId)) {
+                listofIds += liId + ",";
+                if (getByteSize(listofIds) >= 4000) {
+                    listofIds = listofIds.substring(0, listofIds.length - 1);
+                    actuallist.push(listofIds)
+                    listofIds = "";
+                }
+            }
+        });
+        actuallist.push(listofIds.substring(0, listofIds.length - 1))
+        for (let i = 1; i < 100; i++) {
+            console.log("listofIds" + i)
+            if (get_cookie("listofIds" + i)) {
+                delete_cookie("listofIds" + i, "/")
+            } else {
+                break;
+            }
+        }
+        var intid = 1;
+        actuallist.forEach(e => {
+            createCookie("listofIds" + intid, e);
+            intid++;
+        })
+
+        setTimeout(() => {
+            location.href = '@Url.Action("Index", "PrintMultiple")';
+        }, 5000);
+    })
+
+       $("#GenerateJsonConfirmButton").on("click", function () {
+       console.log("GenerateJsonConfirm");
+       var actuallist = []
+       var ul = $('#editModeScenarios');
+       var listofIds = "";
+       var listofIdsNotChecked = "";
+       var alert = $('#alert-json-loading')
+           $('#GenerateJsonConfirmHeader').hide()
+       $(this).hide()
+       alert.show()
+
+
+       ul.find('li').each(function () {
+           var liId = $(this).attr('data-print');
+            listofIds += liId + ",";
+           if (getByteSize(listofIds) >= 4000) {
+               console.log("bigger than 4000");
+                   listofIds = listofIds.substring(0, listofIds.length - 1);
+                   //actuallist.push(listofIds)
+                  // listofIds = "";
+               }
+       });
+       actuallist.push(listofIds.substring(0, listofIds.length - 1))
+       //for (let i = 1; i < 100; i++) {
+           
+           if (get_cookie("listofIds")) {
+               delete_cookie("listofIds", "/")
+           }
+           //else {
+           //    break;
+           //}
+       //}
+       var intid = 1;
+       //actuallist.forEach(e => {
+           createCookie("listofIds",listofIds);
+           //intid++;
+       //})
+
+       setTimeout(() => {
+           location.href = '@Url.Action("Index", "PrintJson")';
+       }, 5000);
+
+   })
+
+    function getByteSize(string) {
+        const encoder = new TextEncoder();
+        const encodedString = encoder.encode(string);
+        return encodedString.byteLength;
+    }
+
+    function createCookie(name, value) {
+        document.cookie = name + "=" + value + "; path=/";
+    }
+
+    function get_cookie(name) {
+        return document.cookie.split(';').some(c => {
+            return c.trim().startsWith(name + '=');
+        });
+    }
+
+    function get_cookie_content(name) {
+        const cookies = document.cookie.split(';');
+        for (let cookie of cookies) {
+            cookie = cookie.trim();
+            if (cookie.startsWith(name + '=')) {
+                const value = cookie.substring(name.length + 1);
+                return decodeURIComponent(value);
+            }
+        }
+        return null;
+    }
+
+
+    function delete_cookie(name, path) {
+        if (get_cookie(name)) {
+            document.cookie = name + "=" +
+                ((path) ? ";path=" + path : "") +
+                ";expires=Thu, 01 Jan 1970 00:00:01 GMT";
+        }
+    }
+
+</script>
+
+<style>
+    .checkbox-menu li label {
+        display:block;
+        padding: 3px 10px;
+        clear: both;
+        font-weight: normal;
+        line-height: 1.42857143;
+        color: #333;
+        white-space: nowrap;
+        margin: 0;
+        transition: background-color .4s ease;
+    }
+
+    .checkbox-menu li input {
+        margin: 0px 5px;
+        top: 2px;
+        position: relative;
+    }
+
+    .checkbox-menu li.active label {
+        background-color: #cbcbff;
+        font-weight: bold;
+    }
+
+    .checkbox-menu li label:hover,
+    .checkbox-menu li label:focus {
+        background-color: #f5f5f5;
+    }
+
+    .checkbox-menu li.active label:hover,
+    .checkbox-menu li.active label:focus {
+        background-color: #b8b8ff;
+    }
+
+    .checkPrint {
+        /* Double-sized Checkboxes */
+        -ms-transform: scale(2); /* IE */
+        -moz-transform: scale(2); /* FF */
+        -webkit-transform: scale(2); /* Safari and Chrome */
+        -o-transform: scale(2); /* Opera */
+        padding: 10px;
+    }
+</style>

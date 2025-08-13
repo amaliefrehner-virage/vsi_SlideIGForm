@@ -1,0 +1,183 @@
+﻿@using SlideIGWebRetry.Models
+@model ScenarioModel
+@{
+    ViewBag.Title = "New Blank IG";
+}
+
+<html>
+<head>
+    <title id="myTitle">New</title>
+    <script src="~/Scripts/jquery-3.6.4.js"></script>
+    <script src="~/Scripts/popper.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="~/Scripts/popper.js"></script>
+    <link href="~/Scripts/select2.min.css" rel="stylesheet" />
+    <script src="~/Scripts/select2.min.js"></script>
+</head>
+<body>
+    <div>
+        <div>
+            <div class="container">
+                <div">
+                    <div class="row justify-content-center align-content-center">
+                        <h2>Type in the information...</h2>
+                    </div>
+                    <div class="row justify-content-center align-content-center">
+                        <div class="p-4">
+                            <table class="table">
+                                <tbody>
+                                    <tr>
+                                        <th class="alert-info">Id:</th>
+                                        <td>
+                                            <div class="input-group w-100">
+                                                <input type="number" id="editInput-Create-Id" class="form-control input-lg border-dark" />
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div id="alert-Create-Id" style="display:none;" class="alert-danger">This field is required</div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th class="alert-info">Language:</th>
+                                        <td>
+                                            <div class="input-group w-100">
+                                                <select id="editInput-Create-Language" class="form-control">
+                                                    <option>Choose Language</option>
+                                                    @foreach (var lang in ViewBag.listLang)
+                                                    {
+                                                        <option value="@lang.Value">
+                                                            @lang.Value
+                                                        </option>
+                                                    }
+                                                </select>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div id="alert-Create-Language" style="display:none;" class="alert-danger">This field is required</div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th class="alert-info">Type:</th>
+                                        <td>
+                                            <div class="input-group w-100">
+                                                <select id="editInput-Create-Type" class="form-control">
+                                                    <option>Choose Type</option>
+                                                    @foreach (var type in ViewBag.listType)
+                                                    {
+                                                        <option value="@type.Value">
+                                                            @type.Value
+                                                        </option>
+                                                    }
+                                                </select>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div id="alert-Create-Type" style="display:none;" class="alert-danger">This field is required</div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th class="alert-info">Scenario Number:</th>
+                                        <td>
+                                            <div class="input-group w-100">
+                                                <input type="text" id="editInput-Create-Scenario_number" class="form-control input-lg border-dark" />
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div id="alert-Create-Scenario_number" style="display:none;" class="alert-danger">This field is required</div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th class="alert-info">Level Name:</th>
+                                        <td>
+                                            <div class="input-group w-100">
+                                                <input type="text" id="editInput-Create-Level_name" class="form-control input-lg border-dark" />
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div id="alert-Create-Level_name" style="display:none;" class="alert-danger">This field is required</div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div id="alert-sc-exists" class="row justify-content-center align-content-center m-4" style="display:none;">
+                        <div id="error-message-json" class="alert-danger w-50"></div>
+                    </div>
+                    <div class="row justify-content-center align-content-center">
+                        <button id="CreateButton" class="btn-lg btn-outline-info">
+                            Create
+                        </button>
+                    </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<script>
+
+    $("#CreateButton").click(function () {
+        var Id = $("#editInput-Create-Id").val()
+        var language = $("#editInput-Create-Language option:selected").text().trim()
+        var type = $("#editInput-Create-Type option:selected").text().trim()
+        var scnumber = $("#editInput-Create-Scenario_number").val()
+        var lvlname = $("#editInput-Create-Level_name").val()
+
+        var error = false;
+        if (Id.trim() == "") {
+            $("#alert-Create-Id").show()
+            error = true;
+        } else { $("#alert-Create-Id").hide() }
+        if (language == "Choose Language") {
+            $("#alert-Create-Language").show()
+            error = true;
+        } else { $("#alert-Create-Language").hide() }
+        if (type == "Choose Type") {
+            $("#alert-Create-Type").show()
+            error = true;
+        } else { $("#alert-Create-Type").hide() }
+        if (scnumber.trim() == "") {
+            $("#alert-Create-Scenario_number").show()
+            error = true;
+        } else { $("#alert-Create-Scenario_number").hide() }
+        if (lvlname.trim() == "") {
+            $("#alert-Create-Level_name").show()
+            error = true;
+        } else { $("#alert-Create-Level_name").hide() }
+        if (error == true) { return; }
+
+        if (error == false) {
+            $.ajax({
+                url: `/api/APIScenario/NewBlank`,
+                type: "POST",
+                data: {
+                    id: Id,
+                    scenarioNumber: scnumber,
+                    language: language,
+                    type: type,
+                    levelName: lvlname
+                },
+                success: function (data) {
+                    console.log("success")
+                    console.log(data)
+                    window.location.href = `/edit/${Id}/${type}/${language}`
+                },
+                error: function (xhr, status, error) {
+                    $('#alert-sc-exists').show()
+                    console.log("error")
+                    console.log(error)
+                    if (error = "Bad Request") {
+                        console.log("error is")
+                        $('#error-message-json').text(xhr.responseJSON.ModelState.Error[0].toString())
+                        $('#alert-sc-exists').show()
+                    }
+                    console.log(xhr.responseJSON.ModelState.Error[0])
+                }
+            })
+        }
+
+    });
+</script>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="d1ffaad823944a78a0432ea5a69fbd75" Name="Diagram1">
+        <EntityTypeShape EntityType="SlideIGWebModel.BulletPoint" Width="1.5" PointX="7.5" PointY="8" IsExpanded="true" />
+        <EntityTypeShape EntityType="SlideIGWebModel.Language" Width="1.5" PointX="0.75" PointY="3.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="SlideIGWebModel.Scenario" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="SlideIGWebModel.ScenarioIG" Width="1.5" PointX="5.25" PointY="2.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="SlideIGWebModel.ScenarioIGSubTitle" Width="1.5" PointX="9.75" PointY="2" IsExpanded="true" />
+        <EntityTypeShape EntityType="SlideIGWebModel.ScenarioIGSubTitleBullet" Width="1.5" PointX="12" PointY="2.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="SlideIGWebModel.ScenarioIGTitle" Width="1.5" PointX="7.5" PointY="2.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="SlideIGWebModel.ScenarioInfo" Width="1.5" PointX="3" PointY="3.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="SlideIGWebModel.ScenarioSlide" Width="1.5" PointX="5.25" PointY="5" IsExpanded="true" />
+        <EntityTypeShape EntityType="SlideIGWebModel.ScenarioSlideSubTitle" Width="1.5" PointX="9.75" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="SlideIGWebModel.ScenarioSlideSubTitleBullet" Width="1.5" PointX="12" PointY="5.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="SlideIGWebModel.ScenarioSlideTitle" Width="1.5" PointX="7.5" PointY="4.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="SlideIGWebModel.SimulatorType" Width="1.5" PointX="0.75" PointY="7.5" IsExpanded="true" />
+        <AssociationConnector Association="SlideIGWebModel.FK__ScenarioI__IDBul__40DA7652" ManuallyRouted="false" />
+        <AssociationConnector Association="SlideIGWebModel.FK__ScenarioI__IDBul__459F2B6F" ManuallyRouted="false" />
+        <AssociationConnector Association="SlideIGWebModel.FK__ScenarioS__IDBul__34749F6D" ManuallyRouted="false" />
+        <AssociationConnector Association="SlideIGWebModel.FK__ScenarioS__IDBul__3939548A" ManuallyRouted="false" />
+        <AssociationConnector Association="SlideIGWebModel.FK__ScenarioI__IDLan__271AA44F" ManuallyRouted="false" />
+        <AssociationConnector Association="SlideIGWebModel.FK__ScenarioI__IDSim__280EC888" ManuallyRouted="false" />
+        <AssociationConnector Association="SlideIGWebModel.FK__ScenarioI__IDSce__26268016" ManuallyRouted="false" />
+        <AssociationConnector Association="SlideIGWebModel.FK__ScenarioI__IDSce__2DC7A1DE" ManuallyRouted="false" />
+        <AssociationConnector Association="SlideIGWebModel.FK__ScenarioI__IDSce__3D09E56E" ManuallyRouted="false" />
+        <AssociationConnector Association="SlideIGWebModel.FK__ScenarioI__IDSce__3FE65219" ManuallyRouted="false" />
+        <AssociationConnector Association="SlideIGWebModel.FK__ScenarioI__IDSce__44AB0736" ManuallyRouted="false" />
+        <AssociationConnector Association="SlideIGWebModel.FK__ScenarioS__IDSce__2AEB3533" ManuallyRouted="false" />
+        <AssociationConnector Association="SlideIGWebModel.FK__ScenarioS__IDSce__30A40E89" ManuallyRouted="false" />
+        <AssociationConnector Association="SlideIGWebModel.FK__ScenarioS__IDSce__33807B34" ManuallyRouted="false" />
+        <AssociationConnector Association="SlideIGWebModel.FK__ScenarioS__IDSce__38453051" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

@@ -1,0 +1,354 @@
+﻿
+@using SlideIGWebRetry.Models
+@model ScenarioModelList
+
+@{
+    ViewBag.Title = "Pages Generator";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>PrintMultiple</title>
+    <script src="~/Scripts/jquery-3.6.4.js"></script>
+    <script src="~/Scripts/popper.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="~/Scripts/popper.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <link href="~/Scripts/select2.min.css" rel="stylesheet" />
+    <script src="~/Scripts/select2.min.js"></script>
+</head>
+<body style="margin-right:35px;" id="bodyall">
+    <div style="display: flex; justify-content: center; height: 10vh; align-items: center;">
+        <button class="btn btn-primary" id="buttonDownload">Download</button>
+    </div>
+    <p>@@skip@@</p>
+    @if (Model != null)
+    {
+        if (Model.scenarioModels != null)
+        {
+            foreach (var slide in Model.scenarioModels)
+            {
+                <div class="globalfont">
+                    <div class="">
+                        @if (@slide.ScenarioInfoId != null)
+                        {
+                        <div class="">
+                            @if (slide.SlideList != null)
+                            {
+                            <div class="">
+                                <b>@@Lesson: @slide.Scenario_number - @slide.Level_name</b>
+                                <div style="height: 311.35pt; position: relative; width:364.3pt; border:1px solid black;">
+                                    <div class="slideCustom" id="slideCustom-@slide.Id-@slide.ScenarioInfoId">
+                                        <div class="">
+                                            <div style="width: 364.3pt">
+                                                <div class="mt-1" style="font-size: 13.0pt; margin-left:10px">
+                                                    <b>$!Lesson: @slide.Scenario_number - @slide.Level_name</b>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr class="border-dark m-0" style="position: absolute; width: 85%; left: 7.5%;" />
+
+                                        <div style="display: flex; align-items: flex-start;">
+                                            <div>
+                                                <div class="" style="font-size: 13.0pt; line-height:1;">
+                                                    @foreach (var o in slide.SlideList)
+                                                    {
+                                                        <p class="" style="margin-left:10px; margin-bottom:9px">@Html.Raw(o.Name)</p>
+                                                        if (o.Subtitles.Count != 0)
+                                                        {
+                                                            <ul style="list-style-type: disc; padding-left: 0px;">
+                                                                @foreach (var k in o.Subtitles)
+                                                                {
+                                                                    <li style="width: 460px; list-style-type: none; padding: 0; margin: 0;">
+                                                                        <span style="display: flex; flex-direction: row; align-items: center;">
+                                                                            <span style="margin-left: 25px; list-style: none;" class="@k.BulletType"></span>
+
+                                                                            @if (k.BulletTypeID == 3)
+                                                                            {
+                                                                                <p style="margin-bottom:0px;">@@@k.BulletTypeID-S@@ @Html.Raw(k.Name)</p>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <p style="margin-bottom:0px;">@Html.Raw(k.Name)</p>
+                                                                            }
+                                                                        </span>
+                                                                        @if (k.Bullets.Count != 0)
+                                                                        {
+                                                                            <ul class="" style="list-style-type: disc; padding-left: 0px;">
+                                                                                @foreach (var u in k.Bullets)
+                                                                                {
+                                                                                    <li style="list-style-type: none; padding: 0; margin: 0;">
+                                                                                        <span style="display: flex; flex-direction: row; align-items: center;">
+                                                                                            <span style="margin-left: 30px; list-style: none;" class="@u.BulletType"></span>
+
+                                                                                            @if (u.BulletTypeID == 4 || u.BulletTypeID == 2)
+                                                                                            {
+                                                                                                <span>@@@u.BulletTypeID-B@@ @Html.Raw(u.Name)</span>
+                                                                                            }
+                                                                                            else
+                                                                                            {
+                                                                                                <span>@Html.Raw(u.Name)</span>
+                                                                                            }
+                                                                                        </span>
+                                                                                    </li>
+                                                                                }
+                                                                            </ul>
+                                                                        }
+                                                                    </li>
+
+                                                                }
+                                                            </ul>
+                                                        }
+                                                    }
+                                                    <p>$!Count</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="slideFill" id="slideFill-@slide.Id-@slide.ScenarioInfoId">
+                                    </div>
+                                </div>
+                            </div>
+                                <span>@@skip@@</span>
+                            }
+                            else
+                            {
+                                <span>@@skip@@</span>
+                            }
+
+                            @if (slide.IGList != null)
+                            {
+                        <div style="width: 364.3pt; font-size: 13.0pt; line-height: 1; margin: 0;" class="igdiv" data-scenarionumber="@slide.Scenario_number">
+                            <table style="width: 364.3pt; background: #BDD6EE; border-collapse: collapse; margin-bottom:8px;">
+                                <tr>
+                                    <td style="font-weight: bold; text-align: left; width: 30%;">Lesson: @slide.Scenario_number</td>
+                                    <td style="font-weight: bold; text-align: right; width: 70%;">@slide.Level_name</td>
+                                </tr>
+                            </table>
+
+                            @{
+                                var lastElement = slide.IGList.Last();
+                            }
+                            @foreach (var i in slide.IGList)
+                            {
+                                <p style="font-size: 12.0pt; margin-top: 0; margin-bottom: 0;">@Html.Raw(@i.Name)</p>
+                                if (i.Subtitles.Count != 0)
+                                {
+                                    foreach (var j in i.Subtitles)
+                                    {
+                                        <ul style="list-style-type: disc; padding-left: 0px; margin-top: 0; margin-bottom: 0;">
+                                            <li style="font-size: 11.0pt; list-style-type: none; padding: 0; margin: 0;">
+                                                <span style="margin-left: 20px; display: flex; flex-direction: row; align-items: center;">
+                                                    <span style="list-style: none;" class="@j.BulletType">@@IG@@</span>
+
+                                                    @if (j.BulletTypeID == 3)
+                                                    {
+                                                        <span>@@@j.BulletTypeID-S@@ @Html.Raw(j.Name)</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span>@Html.Raw(j.Name)</span>
+                                                    }
+                                                </span>
+                                                @if (j.Bullets.Count != 0)
+                                                {
+                                                    <ul style="list-style-type: disc; padding-left: 0px;">
+                                                        @foreach (var v in j.Bullets)
+                                                        {
+                                                            <li style="list-style-type: none; padding: 0; margin: 0;">
+                                                                <span style="margin-left: 50px; display: flex; flex-direction: row; align-items: center;">
+                                                                    <span style="list-style: none;" class="@v.BulletType">@@IG@@</span>
+                                                                    @if (v.BulletTypeID == 4 || v.BulletTypeID == 2)
+                                                                    {
+                                                                        <span>@@@v.BulletTypeID-B@@ @Html.Raw(v.Name)</span>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <span>@Html.Raw(v.Name)</span>
+                                                                    }
+                                                                </span>
+                                                            </li>
+                                                        }
+                                                    </ul>
+                                                }
+                                            </li>
+                                        </ul>
+                                    }
+                                }
+                                if (!ReferenceEquals(i, lastElement))
+                                {
+                                    <hr class="border-dark mb-0 mt-3" />
+                                }
+                            }
+
+                            <span class="bottomParagraph" style="display:none;">@@skip@@</span>
+                        </div>
+                            }
+                            else
+                            {
+                                <span></span>
+                            }
+                        </div>
+                        }
+                        else
+                        {
+                            <span>@@skip@@</span>
+                        }
+                        <span>@@skip@@</span>
+                    </div>
+                </div>
+            }
+        }
+    }
+    else
+    {
+        <h1>Le scenario n'existe pas</h1>
+    }
+</body>
+</html>
+
+<style>
+    .bullet-custom {
+        list-style: none;
+    }
+
+    .bullet-arrow:before {
+        content: "\27A2";
+        margin-right: 15px;
+    }
+
+    .bullet-check:before {
+        content: "\2713";
+        margin-right: 15px;
+        font-weight: bold;
+    }
+
+    .bullet-flower:before {
+        content: "\1BFD";
+        margin-right: 15px;
+    }
+
+    .bullet-white:before {
+        content: "\25E6";
+        margin-right: 15px;
+    }
+
+    .bullet-default:before {
+        content: "\2022";
+        margin-right: 15px;
+    }
+
+    .globalfont {
+        font-family: "Times New Roman";
+    }
+</style>
+
+<script>
+    $(window).on("beforeprint", function () {
+        $(".myDiv").each(function () {
+            var myDivHeight = $(this).height();
+            console.log(myDivHeight)
+            var bottomParagraph = $(this).find(".bottomParagraph");
+            var bottomParagraph2 = $(this).find(".bottomParagraph2");
+            console.log(bottomParagraph.html())
+            if (myDivHeight > 1541 && myDivHeight < 1600) {
+                console.log("new page")
+                bottomParagraph.show();
+            } else if (myDivHeight > 1600) {
+                console.log("new page v2")
+                bottomParagraph.show();
+                bottomParagraph2.show();
+            } else {
+                bottomParagraph.hide();
+                bottomParagraph2.hide();
+            }
+        });
+    });
+
+    $('#buttonDownload').on('click', function () {
+        $(".igdiv").each(function () {
+            var myDivHeight = $(this).height();
+            console.log($(this).attr("data-scenarionumber"))
+            console.log(myDivHeight)
+            var bottomParagraph = $(this).find(".bottomParagraph");
+            console.log(bottomParagraph.html())
+            if (myDivHeight > 821 && myDivHeight < 1000) {
+                console.log("new page")
+                bottomParagraph.show();
+            } else {
+                bottomParagraph.hide();
+            }
+        });
+        event.preventDefault();
+
+        var bodydiv = document.body.getElementsByClassName
+        var htmlContent = document.body.innerHTML;
+
+        var fileName = 'InstructorGuide_' + getFormattedDate() + "_" + generateUniqueFileName();
+
+        // Encode the HTML content using UTF-8
+        var encodedContent = encodeURIComponent(htmlContent);
+
+        // Generate the download link for the Word document
+        var wordLink = document.createElement('a');
+        wordLink.href = 'data:application/msword;charset=utf-8,' + encodedContent;
+        wordLink.download = fileName + '.doc';
+        wordLink.click();
+    })
+
+    $(document).on('keydown', function (event) {
+        if (event.keyCode === 80 && !event.ctrlKey && !event.shiftKey) {
+            $(".igdiv").each(function () {
+                var myDivHeight = $(this).height();
+                console.log($(this).attr("data-scenarionumber"))
+                console.log(myDivHeight)
+                var bottomParagraph = $(this).find(".bottomParagraph");
+                console.log(bottomParagraph.html())
+                if (myDivHeight > 821 && myDivHeight < 1000) {
+                    console.log("new page")
+                    bottomParagraph.show();
+                } else {
+                    bottomParagraph.hide();
+                }
+            });
+            event.preventDefault();
+
+            var bodydiv = document.body.getElementsByClassName
+            var htmlContent = document.body.innerHTML;
+
+            var fileName = 'InstructorGuide_' + getFormattedDate() + "_" + generateUniqueFileName();
+
+            // Encode the HTML content using UTF-8
+            var encodedContent = encodeURIComponent(htmlContent);
+
+            // Generate the download link for the Word document
+            var wordLink = document.createElement('a');
+            wordLink.href = 'data:application/msword;charset=utf-8,' + encodedContent;
+            wordLink.download = fileName + '.doc';
+            wordLink.click();
+        }
+    });
+
+    function generateUniqueFileName() {
+        var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";  // 62 characters
+        var string_length = 5;
+        var randomstring = '';
+        for (var i = 0; i < string_length; i++) {
+            var rnum = Math.floor(Math.random() * chars.length);
+            randomstring += chars.substring(rnum, rnum + 1);
+        }
+        return randomstring;
+    }
+
+    function getFormattedDate() {
+        var date = new Date();
+        var year = date.getFullYear();
+        var month = ("0" + (date.getMonth() + 1)).slice(-2);  // Months are zero indexed, so we add 1
+        var day = ("0" + date.getDate()).slice(-2);
+        return year + "_" + month + "_" + day;
+    }
+</script>

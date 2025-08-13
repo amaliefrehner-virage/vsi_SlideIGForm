@@ -1,0 +1,273 @@
+﻿@using SlideIGWebRetry.Models
+@model ScenarioModel
+@{
+    ViewBag.Title = "New Copy IG";
+}
+
+<html>
+<head>
+    <title id="myTitle">New</title>
+    <script src="~/Scripts/jquery-3.6.4.js"></script>
+    <script src="~/Scripts/popper.min.js"></script>
+    <script src="~/Scripts/popper.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link href="~/Scripts/select2.min.css" rel="stylesheet" />
+    <script src="~/Scripts/select2.min.js"></script>
+</head>
+<body>
+    <div>
+        <div>
+            @if (Model != null)
+            {
+                if (Model.ScenarioInfoId != null)
+                {
+                    <div class="container">
+                        <div id="step1">
+                            <div class="row justify-content-center align-content-center">
+                                <h2>Copying...</h2>
+                            </div>
+                            <div class="row justify-content-center align-content-center">
+                                <div class="p-4">
+                                    <table class="table">
+                                        <tbody>
+                                            <tr>
+                                                <th class="alert-info">Id:</th>
+                                                <td>@Model.Id</td>
+                                            </tr>
+                                            <tr>
+                                                <th class="alert-info">Language:</th>
+                                                <td id="languageCode">@Model.Language</td>
+                                            </tr>
+                                            <tr>
+                                                <th class="alert-info">Type:</th>
+                                                <td>@Model.Type</td>
+                                            </tr>
+                                            <tr>
+                                                <th class="alert-info">Scenario Number:</th>
+                                                <td>@Model.Scenario_number</td>
+                                            </tr>
+                                            <tr>
+                                                <th class="alert-info">Level Name:</th>
+                                                <td>@Model.Level_name</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div id="checkboxes" class="row justify-content-center align-content-center">
+                                <div class="dropdown px-4 pb-4 border border-info p-2 pt-4 mb-4">
+                                    <p class="h4">Choose what to copy</p>
+                                    <div class="row justify-content-center align-content-center">
+                                        <div class="form-check m-2">
+                                            <input class="checkbox-SLIDE" type="checkbox" id="flexSwitchCheckDefault1">
+                                            <label class="h3 ml-1 p-1" for="flexSwitchCheckDefault">Slide</label>
+                                        </div>
+                                        <div class="form-check m-2">
+                                            <input class="checkbox-IG" type="checkbox" id="flexSwitchCheckDefault2">
+                                            <label class="h3 ml-1 p-1" for="flexSwitchCheckDefault">IG</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row justify-content-center align-content-center">
+                                <button id="ContinueButton" class="btn-lg btn-outline-info">Continue</button>
+                            </div>
+                        </div>
+                        <div id="step2" style="display:none;">
+                            <div class="row justify-content-center align-content-center">
+                                <h2>Type in the information...</h2>
+                            </div>
+                            <div class="row justify-content-center align-content-center">
+                                <div class="p-4">
+                                    <table class="table">
+                                        <tbody>
+                                            <tr>
+                                                <th class="alert-info">Id:</th>
+                                                <td>
+                                                    <div class="input-group w-100">
+                                                        <input type="number" id="editInput-Create-Id" class="form-control input-lg border-dark" />
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div id="alert-Create-Id" style="display:none;" class="alert-danger">This field is required</div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th class="alert-info">Type:</th>
+                                                <td>
+                                                    <div class="input-group w-100">
+                                                        <select id="editInput-Create-Type" class="form-control">
+                                                            <option>Choose Type</option>
+                                                            @foreach (var type in ViewBag.listType)
+                                                            {
+                                                                <option value="@type.Value">
+                                                                    @type.Value
+                                                                </option>
+                                                            }
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div id="alert-Create-Type" style="display:none;" class="alert-danger">This field is required</div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th class="alert-info">Scenario Number:</th>
+                                                <td>
+                                                    <div class="input-group w-100">
+                                                        <input type="text" id="editInput-Create-Scenario_number" class="form-control input-lg border-dark" />
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div id="alert-Create-Scenario_number" style="display:none;" class="alert-danger">This field is required</div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th class="alert-info">Level Name:</th>
+                                                <td>
+                                                    <div class="input-group w-100">
+                                                        <input type="text" id="editInput-Create-Level_name" class="form-control input-lg border-dark" />
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div id="alert-Create-Level_name" style="display:none;" class="alert-danger">This field is required</div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div id="alert-sc-exists" class="row justify-content-center align-content-center m-4" style="display:none;">
+                                <div id="error-message-json" class="alert-danger w-50"></div>
+                            </div>
+                            <div class="row justify-content-center align-content-center">
+                                <button id="CreateButton" class="btn-lg btn-outline-info"
+                                        data-Id="@Model.Id"
+                                        data-Type="@Model.Type">
+                                        <!--data-Language="@Model.Language"-->
+                                        
+                                    Create
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="container">
+                        <div class="row justify-content-center align-content-center">
+                            <h2>Can't copy a scenario that does not exist.</h2>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="container">
+                    <div class="row justify-content-center align-content-center">
+                        <h2>Can't copy a scenario that does not exist.</h2>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</body>
+</html>
+
+<script>
+    $("#ContinueButton").click(function () {
+        var checkSlide = $(".checkbox-SLIDE")
+        var checkIG = $(".checkbox-IG")
+        var chooseChecks = $("#checkboxes")
+
+        if (checkSlide != undefined && checkIG != undefined) {
+            console.log(checkSlide.is(':checked'))
+            console.log(checkIG.is(':checked'))
+            $(this).hide();
+            chooseChecks.hide();
+            $("#step1").hide();
+            $("#step2").show();
+        }
+
+    });
+
+    $("#CreateButton").click(function () {
+        var Id = $("#editInput-Create-Id").val()
+        var language = $("#languageCode").text();
+        var type = $("#editInput-Create-Type option:selected").text().trim()
+        var scnumber = $("#editInput-Create-Scenario_number").val()
+        var lvlname = $("#editInput-Create-Level_name").val()
+
+        var checkSlide = $(".checkbox-SLIDE")
+        var checkIG = $(".checkbox-IG")
+
+        var idcopy = $(this).attr("data-Id")
+        var typecopy = $(this).attr("data-Type")
+
+        var error = false;
+        if (Id.trim() == "") {
+            $("#alert-Create-Id").show()
+            error = true;
+        } else { $("#alert-Create-Id").hide() }
+        { $("#alert-Create-Language").hide() }
+        if (type == "Choose Type") {
+            $("#alert-Create-Type").show()
+            error = true;
+        } else { $("#alert-Create-Type").hide() }
+        if (scnumber.trim() == "") {
+            $("#alert-Create-Scenario_number").show()
+            error = true;
+        } else { $("#alert-Create-Scenario_number").hide() }
+        if (lvlname.trim() == "") {
+            $("#alert-Create-Level_name").show()
+            error = true;
+        } else { $("#alert-Create-Level_name").hide() }
+        if (error == true) { return; }
+
+        if (error == false) {
+            //Create new scenario (copy) (ajax)
+
+            $.ajax({
+                url: `/api/APIScenario/FullCopy/${idcopy}/${typecopy}/${language}`,
+                type: "POST",
+                data: {
+                    id: Id,
+                    scenarioNumber: scnumber,
+                    language: language,
+                    type: type,
+                    levelName: lvlname,
+                    slide: checkSlide.is(':checked'),
+                    ig: checkIG.is(':checked')
+                },
+                success: function (data) {
+                    console.log("success")
+                    console.log(data)
+                    window.location.href = `/edit/${Id}/${type}/${language}`
+                },
+                error: function (xhr, status, error) {
+                    console.log("error")
+                    console.log(error)
+                    if (error = "Bad Request") {
+                        console.log("error is")
+                        $('#error-message-json').text(xhr.responseJSON.ModelState.Error[0].toString())
+                        $('#alert-sc-exists').show()
+                    }
+                    console.log(xhr.responseJSON.ModelState.Error[0])
+                }
+            })
+        }
+    });
+</script>
+
+<style>
+    input[type=checkbox] {
+        /* Double-sized Checkboxes */
+        -ms-transform: scale(2); /* IE */
+        -moz-transform: scale(2); /* FF */
+        -webkit-transform: scale(2); /* Safari and Chrome */
+        -o-transform: scale(2); /* Opera */
+        padding: 10px;
+    }
+</style>
