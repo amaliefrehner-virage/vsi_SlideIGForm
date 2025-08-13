@@ -530,17 +530,26 @@
         GenerateListOfScenarios()
     });
 
-    $("#GeneratePdfSlideIG").on("click", function () {
-        console.log("GeneratePdfSlideIG");
+    function GenerateListOfScenariosCookie() {
+        for (let i = 1; i < 100; i++) {
+            console.log("listofIds" + i)
+            if (get_cookie("listofIds" + i)) {
+                delete_cookie("listofIds" + i, "/")
+            } else {
+                break;
+            }
+        }
+
         var actuallist = []
         var ul = $('#editModeScenarios');
         var listofIds = "";
         var listofIdsNotChecked = "";
-        var alert = $('#alert-instructorguide-loading')
-        $('#GeneratePdfSlideIGQuestion').hide()
+        var alert = $('#alert-json-loading')
+        $('#GenerateJsonConfirmHeader').hide()
         $(this).hide()
         alert.show()
 
+        let i = 0;
         ul.find('input').each(function () {
             var dataprintid = $(this).attr('data-print')
             console.log(dataprintid, " : ", $(this).is(':checked'))
@@ -560,7 +569,9 @@
                 }
             }
         });
-        actuallist.push(listofIds.substring(0, listofIds.length - 1))
+        if (listofIds.length != "") {
+            actuallist.push(listofIds.substring(0, listofIds.length - 1))
+        }
         for (let i = 1; i < 100; i++) {
             console.log("listofIds" + i)
             if (get_cookie("listofIds" + i)) {
@@ -569,11 +580,18 @@
                 break;
             }
         }
+
+        var intid = 1;
         var intid = 1;
         actuallist.forEach(e => {
             createCookie("listofIds" + intid, e);
             intid++;
         })
+    }
+
+    $("#GeneratePdfSlideIG").on("click", function () {
+        console.log("GeneratePdfSlideIG");
+        GenerateListOfScenariosCookie();
 
         setTimeout(() => {
             location.href = '@Url.Action("Index", "PrintMultiple")';
@@ -582,69 +600,7 @@
 
        $("#GenerateJsonConfirmButton").on("click", function () {
            console.log("GenerateJsonConfirm");
-
-           for (let i = 1; i < 100; i++) {
-               console.log("listofIds" + i)
-               if (get_cookie("listofIds" + i)) {
-                   delete_cookie("listofIds" + i, "/")
-               } else {
-                   break;
-               }
-           }
-
-           var actuallist = []
-           var ul = $('#editModeScenarios');
-           var listofIds = "";
-           var listofIdsNotChecked = "";
-           var alert = $('#alert-json-loading')
-               $('#GenerateJsonConfirmHeader').hide()
-           $(this).hide()
-           alert.show()
-
-            let i = 0;
-               ul.find('input').each(function () {
-                   var dataprintid = $(this).attr('data-print')
-                   console.log(dataprintid, " : ", $(this).is(':checked'))
-                   if (!$(this).is(':checked')) {
-                       listofIdsNotChecked += $(this).attr('data-print') + ",";
-                   }
-               })
-               ul.find('li').each(function () {
-                   var liId = $(this).attr('data-print');
-                   console.log("listofidsnotchecked: ", listofIdsNotChecked);
-                   if (!listofIdsNotChecked.includes(liId)) {
-                       listofIds += liId + ",";
-                       if (getByteSize(listofIds) >= 4000) {
-                           listofIds = listofIds.substring(0, listofIds.length - 1);
-                           actuallist.push(listofIds)
-                           listofIds = "";
-                       }
-                   }
-               });
-               actuallist.push(listofIds.substring(0, listofIds.length - 1))
-               for (let i = 1; i < 100; i++) {
-                   console.log("listofIds" + i)
-                   if (get_cookie("listofIds" + i)) {
-                       delete_cookie("listofIds" + i, "/")
-                   } else {
-                       break;
-                   }
-               }
-               var intid = 1;
-               actuallist.forEach(e => {
-                   createCookie("listofIds" + intid, e);
-                   intid++;
-               })
-                actuallist.push(listofIds.substring(0, listofIds.length - 1))
-       
-       
-  
-           var intid = 1;
-               var intid = 1;
-               actuallist.forEach(e => {
-                   createCookie("listofIds" + intid, e);
-                   intid++;
-               })
+           GenerateListOfScenariosCookie();
 
            setTimeout(() => {
                location.href = '@Url.Action("Index", "PrintJson")';
