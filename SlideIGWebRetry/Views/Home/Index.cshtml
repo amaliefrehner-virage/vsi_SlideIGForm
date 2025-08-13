@@ -591,32 +591,32 @@
        $(this).hide()
        alert.show()
 
-
+           let i = 0;
        ul.find('li').each(function () {
            var liId = $(this).attr('data-print');
-            listofIds += liId + ",";
-           if (getByteSize(listofIds) >= 4000) {
-               console.log("bigger than 4000");
-                   listofIds = listofIds.substring(0, listofIds.length - 1);
+           if (i == 0) {
+               listofIds = liId;
+           } else {
+               listofIds += "," + liId;
+           }
+           i++;
+           //if (getByteSize(listofIds) >= 4000) {
+               //console.log("bigger than 4000");
+               //    listofIds = listofIds.substring(0, listofIds.length - 1);
                    //actuallist.push(listofIds)
                   // listofIds = "";
-               }
+               //}
        });
        actuallist.push(listofIds.substring(0, listofIds.length - 1))
-       //for (let i = 1; i < 100; i++) {
+       
            
-           if (get_cookie("listofIds")) {
-               delete_cookie("listofIds", "/")
-           }
-           //else {
-           //    break;
-           //}
-       //}
+        if (get_cookie("listofIds")) {
+            delete_cookie("listofIds", "/")
+        }
+  
        var intid = 1;
-       //actuallist.forEach(e => {
-           createCookie("listofIds",listofIds);
-           //intid++;
-       //})
+        createCookie("listofIds",listofIds);
+
 
        setTimeout(() => {
            location.href = '@Url.Action("Index", "PrintJson")';
