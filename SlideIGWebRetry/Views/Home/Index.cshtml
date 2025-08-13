@@ -382,6 +382,7 @@
         // Create a hidden input element, and trigger it
         let input = document.createElement('input');
         input.type = 'file';
+       
         input.accept = '.cfg';
         input.onchange = e => {
 
@@ -459,50 +460,80 @@
         let input = document.createElement('input');
         input.type = 'file';
         input.accept = '.json';
-        input.onchange = e => {
-
-            // Getting a hold of the file reference
-            let file = e.target.files[0];
-            if (!file.name.includes(".json") || !file.name.includes("_") || file.name.split("_").length !=3) {
-                alert("Error: File name must have the following format: \n\n[scenarioId]_[languageId]_[simulatorTypeId].json \n\n (for example: 912_4_1.json) ");
-                return;
-            }
-            let name = file.name.replace(".json", "").split("_");          
-
-            let id = name[0];
-            let language = name[1];
-            let simulatorType = name[2];
-
+        input.multiple = true;
+        var successfulUploads = 0;
+        var unsuccessfulUploads = "";
+        var errors = 0;
+        input.onchange = e=> {
             
 
-            // Setting up the FileReader object
-            let reader = new FileReader();
-            reader.readAsText(file, 'UTF-8');
+            // Getting a hold of the file reference
+            for (let j = 0; j < e.target.files.length; j++) {
+                let file = e.target.files[j];
+                if (!file.name.includes(".json") || !file.name.includes("_") || file.name.split("_").length != 3) {
+                    alert("Error: File name must have the following format: \n\n[scenarioId]_[languageId]_[simulatorTypeId].json \n\n (for example: 912_4_1.json) ");
+                    return;
+                }
+                let name = file.name.replace(".json", "").split("_");
 
-            // Here we tell the reader what to do when it's done reading...
-            reader.onload = readerEvent => {
-                let content = readerEvent.target.result; // This is the file content
-                console.log("content is ", content);
-                let content2 = JSON.stringify(content);
-                $.ajax({
-                    url: `/api/APIScenario/DeserializeJSONStringToScenarioInfo/${id}/${simulatorType}/${language}`,
-                    type: "PUT",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    processData: false,
-                    data:  content2,
-                    success: function (data) {
-                        alert("Success!")
-                    },
-                    error: function (xhr, status, error) {
-                        alert(JSON.stringify(xhr));
-                        console.log(error)
-                    }
-                })
+                let id = name[0];
+                let language = name[1];
+                let simulatorType = name[2];
+
+                // Setting up the FileReader object
+                let reader = new FileReader();
+                reader.readAsText(file, 'UTF-8');
+
+                // Here we tell the reader what to do when it's done reading...
+                reader.onload = readerEvent => {
+                    let content = readerEvent.target.result; // This is the file content
+                    //console.log("content is ", content);
+                    let content2 = JSON.stringify(content);
+                    $.ajax({
+                        url: `/api/APIScenario/DeserializeJSONStringToScenarioInfo/${id}/${simulatorType}/${language}`,
+                        type: "PUT",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        processData: false,
+                        data: content2,
+                        success: function (data) {
+                            successfulUploads += 1;
+                            console.log("succesful uploads :" + successfulUploads)
+                        },
+                        error: function (xhr, status, error) {
+                            unsuccessfulUploads += file.name + ": " + JSON.stringify(xhr); + "\n\n"
+                            errors += 1;
+                            //alert(unsuccessfulUploads)
+                        },
+                        complete: function (xhr, statusText) {
+                            if (j == e.target.files.length - 1) {
+                                let message = "";
+                                if (successfulUploads > 0) {
+                                    message += "successful uploads: " + successfulUploads + "\n";
+                                }
+                                if (unsuccessfulUploads != "") {
+                                    message += "unsuccessful uploads: "+errors+"\n"+ unsuccessfulUploads;
+                                }
+                                alert(message)
+                            }
+                        }
+                    });
+                }
             }
+            console.log(successfulUploads);
+            //if (successfulUploads > 0) {
+            //    alert("successful uploads: \n" + successfulUploads);
+            //}
+            //if (unsuccessfulUploads.length > 0) {
+            //    alert("unsuccessful uploads : \n" + unsuccessfulUploads);
+            //}
+            
+            //let file = e.target.files[0];
+            
         }
         input.click();
+        
     })
 
 
