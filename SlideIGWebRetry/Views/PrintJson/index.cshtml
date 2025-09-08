@@ -43,9 +43,14 @@
                         {
                             if (slide.Content.Title != null)
                             {
+                                //if (slide.Content.ScenarioIGs != null)
+                                //{
+                                //    if (slide.Content.ScenarioIGs.)
+                                //}
                                 <div class="">
                                     <b>@@Lesson: @slide.Content.Title </b>
                                 </div>
+                                <p id="bodyContent" value="@Model">@Model</p>
                             }
                         }
                         else
@@ -99,7 +104,7 @@
 <script>
 
 
-    $('#buttonDownload').on('click', function () {
+    @*$('#buttonDownload').on('click', function () {
 
         event.preventDefault();
         var alert = $('#loading')
@@ -110,6 +115,38 @@
        }, 5000);
 
 
+    })*@
+
+    $('#buttonDownload').on('click', function () {
+        //$(".igdiv").each(function () {
+        //    var myDivHeight = $(this).height();
+        //    console.log($(this).attr("data-scenarionumber"))
+        //    console.log(myDivHeight)
+        //    var bottomParagraph = $(this).find(".bottomParagraph");
+        //    console.log(bottomParagraph.html())
+        //    if (myDivHeight > 821 && myDivHeight < 1000) {
+        //        console.log("new page")
+        //        bottomParagraph.show();
+        //    } else {
+        //        bottomParagraph.hide();
+        //    }
+        //});
+        event.preventDefault();
+
+        var bodydiv = document.getElementById("bodyContent");
+        console.log("bodydiv " + bodydiv);
+        //var htmlContent = document.body.innerHTML;
+
+        var fileName = 'bigfile.json';
+
+        // Encode the HTML content using UTF-8
+        var encodedContent = encodeURIComponent(htmlContent);
+
+        // Generate the download link for the Word document
+        var wordLink = document.createElement('a');
+        wordLink.href = 'data:application/json;charset=utf-8,' + encodedContent;
+        wordLink.download = fileName;
+        wordLink.click();
     })
 
 </script>

@@ -1,11 +1,14 @@
 ﻿using Microsoft.Office.Interop.Word;
+using Microsoft.Win32;
 using Newtonsoft.Json;
 using Org.BouncyCastle.Asn1.Ocsp;
 using SlideIGWebRetry.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Runtime.InteropServices;
 using System.Security.Policy;
 using System.Text;
@@ -15,12 +18,19 @@ using System.Web.Http.Results;
 using System.Web.Mvc;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Windows;
+using System.Windows.Forms;
+using MessageBox = System.Windows.MessageBox;
 
 
 namespace SlideIGWebRetry.Controllers
 {
     public class FilesController : Controller
     {
+
+        private System.Windows.Forms.SaveFileDialog saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+        private bool _isBusy = false;
+
         public async Task<ActionResult> Index()
         {
             List<JsonResult<ScenarioInfo>> results = await GetResults();
@@ -29,12 +39,36 @@ namespace SlideIGWebRetry.Controllers
             {
                 string serializedObject = JsonConvert.SerializeObject(result.Content);
 
-                var filePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+                var filePath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
                 var fileName = $"{result.Content.IDScenario}_{ result.Content.IDLanguage}_{ result.Content.IDSimulatorType}.json";
-                System.IO.File.WriteAllText(Path.Combine(filePath,"Downloads",fileName), serializedObject);
+                //Console.WriteLine(Path.Combine(filePath, "Downloads", fileName));
+                System.IO.File.WriteAllText(Path.Combine(filePath,fileName), serializedObject);
+               
+                saveFileDialog1.ShowDialog();
+                DownloadFile(fileName);
             }
             return View("");
         }
+
+
+        private void DownloadFile(string fileName)
+        {
+            if (_isBusy) return;
+
+            saveFileDialog1.InitialDirectory = "C:\\";
+            saveFileDialog1.Title = "Save text Files";
+            saveFileDialog1.CheckFileExists = true;
+            saveFileDialog1.CheckPathExists = true;
+            saveFileDialog1.DefaultExt = "txt";
+            saveFileDialog1.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
+            saveFileDialog1.FilterIndex = 2;
+            saveFileDialog1.RestoreDirectory = true;
+            //if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            //{
+            //    textBox1.Text = saveFileDialog1.FileName;
+            //}
+        }
+
         public Stream GenerateStreamFromString(string s)
         {
             MemoryStream stream = new MemoryStream();
