@@ -2,6 +2,7 @@
 @using SlideIGWebRetry.Models
 @using System.Web.Http.Results;
 @using SlideIGWebRetry.HtmlHelperExtensions
+@using Newtonsoft.Json;
 @model List<JsonResult<ScenarioInfo>>
 
 @{
@@ -18,48 +19,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="~/Scripts/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.2.0/jszip.min.js"></script>
     <script src="~/Scripts/popper.js"></script>
     <script src="~/Scripts/bootstrap.min.js"></script>
     <link href="~/Scripts/select2.min.css" rel="stylesheet" />
     <script src="~/Scripts/select2.min.js"></script>
 </head>
-<body style="margin-right:35px;" id="bodyall">
-    <div style="display: flex; justify-content: center; height: 10vh; align-items: center;">
-        <button class="btn btn-primary" id="buttonDownload">Download</button>
+<body  id="bodyall">
+    <div style="display: flex; height: 10vh; align-items: center;">
+        <h3>SlideIGs In Json Format</h3>
+        <button class="btn btn-primary" style="margin-left:10vw" id="buttonDownload">Download</button>
+     
     </div>
-    <p>@@skip@@</p>
     @if (Model != null)
     {
         if (Model != null)
         {
-            foreach (var slide in Model)
-            {
-                <div class="globalfont">
-                    <div id="loading" style="display:none">
-                        @Html.LoadingAnimation()
-                    </div>
-                    <div class="">
-                        @if (@slide.Content != null)
-                        {
-                            if (slide.Content.Title != null)
-                            {
-                                //if (slide.Content.ScenarioIGs != null)
-                                //{
-                                //    if (slide.Content.ScenarioIGs.)
-                                //}
-                                <div class="">
-                                    <b>@@Lesson: @slide.Content.Title </b>
-                                </div>
-                                <p id="bodyContent" value="@Model">@Model</p>
-                            }
-                        }
-                        else
-                        {
-                            <h1>Le scenario n'existe pas</h1>
-                        }
-                    </div>
+
+            <div class="globalfont">
+                <div id="loading" style="display:none">
+                    @Html.LoadingAnimation()
                 </div>
-            }
+                <div class="">
+                    @foreach (var slide in Model)
+                    { 
+                        var id = $"{slide.Content.IDScenario}_{slide.Content.IDLanguage}_{slide.Content.IDSimulatorType}";   
+                        <div style="margin-top:1vh">
+                            <button style="width:10vw;border-radius:3px" id=@($"btn_{id}")>@($"{id} 🔽")</button>
+                            <pre id=@($"{id}") style="display:none" class="ScenarioObject">@(JsonConvert.SerializeObject(slide.Content, Formatting.Indented))</pre>
+                        </div>   
+                    }
+
+                </div>
+            </div>
         }
     }
 </body>
@@ -103,49 +95,68 @@
 
 <script>
 
+    function showScenarioContent(id) {
+        document.getElementById(id).style = "display:auto";
+    }
+    $("button").on("click", function (event) {
+        event.preventDefault();
+        
+        var idOfEvent = event.target.id;
 
-    @*$('#buttonDownload').on('click', function () {
+        if (idOfEvent.startsWith("btn_")) {
+
+            var idScenarioElement = idOfEvent.replace("btn_", "");
+
+            if (document.getElementById(idOfEvent).innerHTML.includes("🔽")) {
+               
+                console.log("button was clicked " + idScenarioElement);
+                document.getElementById(idOfEvent).innerHTML = document.getElementById(idOfEvent).innerHTML.replace("🔽","🔼");
+                document.getElementById(idScenarioElement).style = 'display:auto';
+
+            } else {
+
+                document.getElementById(idOfEvent).innerHTML = document.getElementById(idOfEvent).innerHTML.replace("🔼", "🔽");
+
+                document.getElementById(idScenarioElement).style = 'display:none';
+
+            }
+        }
+
+    });
+
+    $('#buttonDownload').on('click', async function () {
 
         event.preventDefault();
-        var alert = $('#loading')
 
-        alert.show()
-        setTimeout(() => {
-           location.href = '@Url.Action("Index", "Files")';
-       }, 5000);
+        var scenarios = document.querySelectorAll(".ScenarioObject");
+        var scenarioArray = [...scenarios];
+        var blobArray = [];
+        scenarioArray.forEach(sce => {
 
+            var fileName = sce.id + ".json";
+            var encodedContent = encodeURIComponent(sce.innerHTML);
 
-    })*@
+            var blob = new Blob([sce.innerHTML], {
+                type: "application/json",
+            });
+            blob.name = fileName;
+            blobArray.push(blob);
+            //var wordLink = document.createElement('a');
+            //wordLink.href = 'data:application/json;charset=utf-8,' + encodedContent;
+            //wordLink.download = fileName;
+            //wordLink.click();
+        }); 
+        const zip = new JSZip();
+        const folder = zip.folder('JSONFolder');
+        blobArray.forEach((blob) => folder.file(blob.name, blob));
+        var zipFile = await zip.generateAsync({ type: "blob" });
 
-    $('#buttonDownload').on('click', function () {
-        //$(".igdiv").each(function () {
-        //    var myDivHeight = $(this).height();
-        //    console.log($(this).attr("data-scenarionumber"))
-        //    console.log(myDivHeight)
-        //    var bottomParagraph = $(this).find(".bottomParagraph");
-        //    console.log(bottomParagraph.html())
-        //    if (myDivHeight > 821 && myDivHeight < 1000) {
-        //        console.log("new page")
-        //        bottomParagraph.show();
-        //    } else {
-        //        bottomParagraph.hide();
-        //    }
-        //});
-        event.preventDefault();
+        console.log("folder " + Object.keys(folder));
+        console.log("zip " + Object.keys(zip));
 
-        var bodydiv = document.getElementById("bodyContent");
-        console.log("bodydiv " + bodydiv);
-        //var htmlContent = document.body.innerHTML;
-
-        var fileName = 'bigfile.json';
-
-        // Encode the HTML content using UTF-8
-        var encodedContent = encodeURIComponent(htmlContent);
-
-        // Generate the download link for the Word document
         var wordLink = document.createElement('a');
-        wordLink.href = 'data:application/json;charset=utf-8,' + encodedContent;
-        wordLink.download = fileName;
+        wordLink.setAttribute("href", URL.createObjectURL(zipFile));
+        wordLink.download = "JSONFolder";
         wordLink.click();
     })
 
