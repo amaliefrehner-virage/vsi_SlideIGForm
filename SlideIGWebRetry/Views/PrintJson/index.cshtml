@@ -134,9 +134,8 @@
         scenarioArray.forEach(sce => {
 
             var fileName = sce.id + ".json";
-            var encodedContent = encodeURIComponent(sce.innerHTML);
-
-            var blob = new Blob([sce.innerHTML], {
+      
+            var blob = new Blob([sce.innerText], {
                 type: "application/json",
             });
             blob.name = fileName;
@@ -150,9 +149,6 @@
         const folder = zip.folder('JSONFolder');
         blobArray.forEach((blob) => folder.file(blob.name, blob));
         var zipFile = await zip.generateAsync({ type: "blob" });
-
-        console.log("folder " + Object.keys(folder));
-        console.log("zip " + Object.keys(zip));
 
         var wordLink = document.createElement('a');
         wordLink.setAttribute("href", URL.createObjectURL(zipFile));

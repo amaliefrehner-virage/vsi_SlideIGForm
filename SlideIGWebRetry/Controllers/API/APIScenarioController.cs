@@ -16,6 +16,7 @@ using System.Web.Http;
 using System.Web.Http.Results;
 using System.IO;
 using System.Data.Entity.ModelConfiguration.Configuration;
+using System.Web.Http.Controllers;
 
 namespace SlideIGWebRetry.Controllers
 {
@@ -945,6 +946,36 @@ namespace SlideIGWebRetry.Controllers
                 return BadRequest("parameter error: make sure to define the simulator type (vs600/vs500) and language (en/fr/es/ar)");
             }
             return await PutScenario(id, type, language, obj);
+        }
+
+        [Route("api/APIScenario/DeserializeJSONStringsToScenarioInfoList/")]
+        [HttpPut]
+        public async System.Threading.Tasks.Task DeserializeJSONStringsToScenarioInfoList( [FromBody] string content)
+        {
+            try
+            {
+                var obj = JsonConvert.DeserializeObject<List<ScenarioInfo>>(content);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            await System.Threading.Tasks.Task.CompletedTask;
+
+            //var typesDB = GetTypes();
+            //var languagesDB = GetLanguages();
+            //var type = string.Empty;
+            //var language = string.Empty;
+            //try
+            //{
+            //    type = typesDB.Where(x => x.Key.ToString() == typeId).First().Value;
+            //    language = languagesDB.Where(x => x.Key.ToString() == languageId).First().Value;
+            //}
+            //catch (Exception ex)
+            //{
+            //    return BadRequest("parameter error: make sure to define the simulator type (vs600/vs500) and language (en/fr/es/ar)");
+            //}
+            //return await PutScenario(id, type, language, obj);
         }
 
         [Route("api/APIScenario/PutScenarioJson/{id}/{typeName}/{languageName}")]
